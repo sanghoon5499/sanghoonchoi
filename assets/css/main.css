@@ -4700,7 +4700,7 @@ input, select, textarea {
 	.modal {
 		display: none;
 		position: fixed;
-		z-index: 9999;
+		z-index: 1;
 		left: 0;
 		top: 0;
 		width: 100%;
@@ -4711,26 +4711,32 @@ input, select, textarea {
 		align-items: center;
 		padding: 1rem; /* Prevents images from touching edges */
 		box-sizing: border-box;
+		flex-direction: column;
 	}
 
 	/* Modal Content (Image) */
 	.modal-content {
 		max-width: 90vw;
     	max-height: 90vh; 
-		margin: auto;
+		/* margin: auto; */
 		display: block;
 		left: 0;
 		right: 0;
 		top: 0;
 		bottom: 0;
-		position: absolute;
+		/* position: absolute; */
 	}
 
 	/* Caption (optional) */
 	#caption {
+		margin: 10px auto;
+		display: block;
+		width: 80%;
+		max-width: 700px;
 		text-align: center;
-		color: white;
-		padding: 10px;
+		color: #ccc;
+		padding: 10px 0;
+		height: auto;
 	}
 
 	/* 100% Image Width on Smaller Screens */
