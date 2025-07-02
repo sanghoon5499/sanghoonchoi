@@ -8,6 +8,13 @@
 		<link rel="icon" type="image/x-icon" href="https://storage.googleapis.com/sc-travel-blog/favicon2.png">
 		<link rel="stylesheet" href="../assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				document
+				.querySelectorAll("section.posts .row > div > span")
+				.forEach(span => span.classList.add("image","fit"));
+			});
+		</script>
 	</head>
 	<body class="is-preload">
 
@@ -39,56 +46,67 @@
 					<div id="main">
 
 						<!-- Post -->
-							<section class="post">
-								<header class="major">
+							<section class="post" style="background-color: #0b0d10;">
+								<header class="major" style="color: #bbb;">
 									<span class="date">‎ </span>
-									<h1>Photography<br />
+									<h1 style="color: #444;">Photography<br />
 									</h1>
-									<p>With copius amounts of travelling, I found myself with a lot of photos,<br />
-									which I plan to upload here. I got myself a real camera (Fujifilm X-M5)<br />
-									just last year, so I'm looking forward to uploading better photos.</p>
+									<p>Some of my favourite photos from my travels. I'm hoping to get better composition<br /> 
+										and post-processing. Click on the pictures for a short explanation!</p>
 								</header>
-								<div class="image main"><img src="images/pic01.jpg" alt="" /></div>
-								<p>Text 1</p>
-								<p>Text 2</p>
-							</section>
+								<div class="image main"><img src="images/pic01.jpg" alt="" /></div> <!--maybe a picture of the xm5?-->
+							
 
-							<section class="posts">
-								<article>
-									<header>
-										<span class="date">mm dd, yyyy - mm dd, yyyy</span>
-										<h2><a href="#">Location<br />
-									</header>
-									<a href="#" class="image fit"><img src="images/pic02.jpg" alt="" /></a>
-									<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-									<ul class="actions special">
-										<li><a href="travel_blogs/montreal.html" class="button">Full Story</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-										<span class="date">mm dd, yyyy - mm dd, yyyy</span>
-										<h2><a href="#">Location<br />
-											</a></h2>
-									</header>
-									<a href="#" class="image fit"><img src="images/pic03.jpg" alt="" /></a>
-									<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-									<ul class="actions special">
-										<li><a href="travel_blogs/SF_LA.html" class="button">Full Story</a></li>
-									</ul>
-								</article>
+								<section class="posts">
+									<div class="row gtr-50 gtr-uniform">
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/cat_street_edited.jpg" alt="Shibuya's Cat Street - known for its trendy shopping and cafes." /></span></div>
+										<div class="col-2"><span></span></div>
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/palace2_edited.jpg" alt="Geonchunmun is one of the four main Gyeongbokgung gates." /></span></div>
+										<!-- Break -->
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/yourname_stairs_edited.jpg" alt="Near the Suga shrine where the famous stairs from Your Name are from." /></span></div>
+										<div class="col-2"><span></span></div>
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/osaka_rain_edited.jpg" alt="A rainy night in Osaka. Taken in a hurry on the way back to the hotel." /></span></div>
+										<!-- Break -->
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/nara_man_edited.jpg" alt="Crossing the street at Nara." /></span></div>
+										<div class="col-2"><span></span></div>
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/nara_gate_edited.jpg" alt="One of the many Torii gates at Nara." /></span></div>
+										<!-- Break -->
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/hakone1_edited.jpg" alt="At the base of Mt. Kintoki, Koinobori are strung across the entrance of the shrine." /></span></div>
+										<div class="col-2"><span></span></div>
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/osaka_city_edited.jpg" alt="Downtown Osaka seems to be overlooked in favour of Dotonbori." /></span></div>
+										<!-- Break -->
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/kamakura_village_edited.jpg" alt="Overlooking the beach and trains, a quiet neighborhood is home to summer cottages and commoners alike." /></span></div>
+										<div class="col-2"><span></span></div>
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/kamakura2_edited.jpg" alt="A clear view Mt. Fuji from Kamakura is rare." /></span></div>
+										<!-- Break -->
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/minoo_girl_edited.jpg" alt="Minoo park begins high up, but leads you down towards a waterfall." /></span></div>
+										<div class="col-2"><span></span></div>
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/palace1_edited.jpg" alt="Heungnyemun, not one of the four main gates but beautiful nonetheless." /></span></div>
+										<!-- Break -->
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/workers.jpg" alt="Workers at Suncheon Park." /></span></div>
+										<div class="col-2"><span></span></div>
+										<div class="col-5"><span><img src="https://storage.googleapis.com/sc-photography/.jpg" alt="" /></span></div>
+									</div>
+								</section>
 							</section>
 					</div>
 			</div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/jquery.scrollex.min.js"></script>
+			<script src="../assets/js/jquery.scrolly.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+			<img class="modal-content" id="image_box">
+			<div id="caption"></div>
+		</div>
+		<script src="../travel_blogs/image_overlay_handler.js"></script>
 
 	</body>
 </html>

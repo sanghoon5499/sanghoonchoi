@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = document.getElementsByClassName("close")[0];
 
     // Select all images with class 'image_overlay'
-    const images = document.querySelectorAll(".image_overlay");
+    const images = document.querySelectorAll("img");
 
     images.forEach(img => {
         img.addEventListener("click", function () {
