@@ -336,6 +336,10 @@ input, select, textarea {
 
 /* Row */
 
+	.photography_row_gap {
+		row-gap: 2rem;
+	}
+
 	.row {
 		display: flex;
 		flex-wrap: wrap;
