@@ -2710,6 +2710,16 @@ input, select, textarea {
 			vertical-align: middle;
 		}
 
+		ul.actions li .button.primary {
+			background-color: #fff;
+			color: #000 !important;
+			transition: background-color 0.2s ease-in-out;
+		}
+
+		ul.actions li .button.primary:hover {
+			background-color: rgba(255, 255, 255, 0.85);
+		}
+
 		ul.actions.special {
 			-moz-justify-content: center;
 			-webkit-justify-content: center;
