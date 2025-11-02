@@ -47,36 +47,37 @@
 									</a></h2>
 									<p>Take a look into what the today's third-wave coffee has to offer and details on how they get produced.</p>
 								</header>
-								<a href="./Overview/" class="image fit" style="width: 80%; margin-left: auto; margin-right: auto;"><img src="https://storage.googleapis.com/sc-travel-blog/Coffee/coffee_thumbnail.png" alt="" /></a>
+								<a href="./Overview/" class="image fit" style="width: 80%; margin-left: auto; margin-right: auto;"><img  class="image_overlay js-dynamic-image" data-filename="coffee_thumbnail.png" alt="" /></a>
 								<ul class="actions special">
 									<li><a href="./Overview/" class="button large">Read Article</a></li>
 								</ul>
 							</article>
 
-                        <!-- Other Posts -->
-                        
+                        <!-- Reviews -->
+						<h2>Reviews</h2>
                         <section class="posts">
+							
                             <article>
                                 <header>
-                                    <span class="date">MMM DD, 2025</span>
+                                    <span class="date">MM DD, YYYY</span>
                                     <h2><a href="#">Londinium Vectis</a></h2>
                                 </header>
-                                <a href="" class="image fit" target="_blank"><img src="" alt="" /></a>
+                                <a href="" class="image fit"><img src="" alt="" /></a>
                                 <p>Review coming soon!</p>
                                 <ul class="actions special">
-                                    <li><a href="" class="button" target="_blank">Read</a></li>
+                                    <li><a href="" class="button">Read</a></li>
                                 </ul>
                             </article>
 
 							<article>
                                 <header>
-                                    <span class="date">MMM DD, YYYY</span>
-                                    <h2><a href="#">Rancilio Silvia V2</a></h2>
+                                    <span class="date">Nov 1, 2025</span>
+                                    <h2><a href="./reviews/rancilio_silvia/">Rancilio Silvia V2</a></h2>
                                 </header>
-                                <a href="" class="image fit" target="_blank"><img src="" alt="" /></a>
-                                <p>Review coming soon!</p>
+                                <a href="./reviews/rancilio_silvia/" class="image fit"><img src="https://storage.googleapis.com/sc-coffee/reviews/silvia/ranciliov2.jpg" alt="" /></a>
+                                <p>My first proper espresso machine. A long look back at the love-hate relationship that taught me everything about the daily grind, from temperature surfing to finally getting decent steamed milk.</p>
                                 <ul class="actions special">
-                                    <li><a href="" class="button" target="_blank">Read</a></li>
+                                    <li><a href="./reviews/rancilio_silvia/" class="button">Read</a></li>
                                 </ul>
                             </article>
 
@@ -96,11 +97,32 @@
 			<script src="../assets/js/util.js"></script>
 			<script src="../assets/js/main.js"></script>
 
-		<!-- The Modal -->
-		<!-- <div id="myModal" class="modal">
-			<img class="modal-content" id="image_box">
-			<div id="caption"></div>
-		</div>
-		<script src="../travel_blogs/image_overlay_handler.js"></script> -->
+		<!-- Script to handle dynamic image loading -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Define the base URL as a variable for easy management
+                const resourcePrefix = "https://storage.googleapis.com/sc-coffee/overview/";
+
+                // Get all elements with the 'js-dynamic-image' class, including video
+                const mediaElements = document.querySelectorAll('.js-dynamic-image');
+
+                // Loop through each element and set its source dynamically
+                mediaElements.forEach(element => {
+                    // Get the filename from the data-filename attribute
+                    const filename = element.getAttribute('data-filename');
+
+                    // If a filename is present, construct the full URL and set the src
+                    if (filename) {
+                        const fullPath = resourcePrefix + filename;
+                        if (element.tagName === 'IMG') {
+                            element.src = fullPath;
+                        } else if (element.tagName === 'VIDEO') {
+                            element.src = fullPath;
+                            element.load(); // Call .load() to begin buffering the video
+                        }
+                    }
+                });
+            });
+        </script>
 	</body>
 </html>
