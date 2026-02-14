@@ -4726,7 +4726,7 @@ input, select, textarea {
 		cursor: default !important;
 	}
   
-  	img:hover {opacity: 0.7;}
+  	/* img:hover {opacity: 0.7;} */
 	
 	.modal {
 		display: none;
@@ -4780,7 +4780,7 @@ input, select, textarea {
 	/* Add Animation - Zoom in the Modal */
 	.modal-content, #caption {
 		animation-name: zoom;
-		animation-duration: 0.6s;
+		animation-duration: 0.3s;
 	}
 	
 	@keyframes zoom {
@@ -4789,7 +4789,7 @@ input, select, textarea {
 	}
 
 	.modal-content.zoom-out {
-		animation: zoom-out 0.3s forwards;
+		animation: zoom-out 0.2s forwards;
 	}
 	
 	@keyframes zoom-out {

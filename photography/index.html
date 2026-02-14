@@ -7,8 +7,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/x-icon" href="https://storage.googleapis.com/sc-travel-blog/favicon2.png">
 		<link rel="stylesheet" href="../assets/css/main.css" />
+		<link rel="stylesheet" href="instagram.css" />
 		<noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
-		</script>
+		
+	</style>
 	</head>
 	<body class="is-preload">
 
@@ -47,100 +49,48 @@
 									<h1>Photography<br />
 									</h1>
 									<p style="color:black">Some of my favourite photos from my travels. I'm hoping to get better at composition<br /> 
-										and post-processing. Click on the pictures for a short explanation!</p>
+										and post-processing. Swipe or click the left/right sides of the post to see more!</p>
 								</header>
 								<div class="image main"><img src="images/pic01.jpg" alt="" /></div> <!--maybe a picture of the xm5?-->
 							
-
-								<section class="posts">
-									<div class="row gtr-50 gtr-uniform photography_row_gap">
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="cat_street_edited.jpg" 
-												alt="Cat Street | A busy intersection in front of Mr Brothers Cut Club" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="ginza_edited.jpg" 
-												alt="Ginza | A quiet slice of the workday in Ginza" /></span></div>
-										</div>
-
-										<div class="image main"><img class="image_overlay js-dynamic-image" 
-											data-filename="kamakura_beach_edited.jpg" 
-											alt="Kamakura | Mt. Fuji from the beaches of Kamakura" />
-										</div>
-
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="kamakura_village_edited.jpg" 
-												alt="Kamakura | Loving this VW van" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="kamakura_stairs.jpg" 
-												alt="Kamakura | Looking out to the southern sea" /></span></div>
-										</div>
-
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="fennec_fox.jpg" 
-												alt="Suncheon | A fennec fox sunbathes under the blistering sun" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="grinders.JPG" 
-												alt="Jeju | A coffee museum boasting their collection of antique grinders" /></span></div>
-										</div>
-
-										<div class="image main"><img class="image_overlay js-dynamic-image" 
-											data-filename="hakone2_edited.jpg" 
-											alt="Hakone | Mt. Hakone as seen from Mt. Ashigara" />
-										</div>
-
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="pizza.JPG" 
-												alt="Toronto | Pizzeria Libretto" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="stcatherines.JPG" 
-												alt="St. Catherines | Toronto from St. Catherines' beach" /></span></div>
-										</div>
-
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="rx72.JPG" 
-												alt="Seoul | Keisuke Takahashi's RX-7 from Initial D" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="rx7.jpg" 
-												alt="Seoul | Naughty" /></span></div>
-										</div>
-
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="nara_gate_edited.jpg" 
-												alt="Nara | One of many Torii gates in the park" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="palace1_edited.jpg" 
-												alt="Seoul | Hanbok experience at Gwanghwamun" /></span></div>
-										</div>
-
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="lightshow_silhouettes.JPG" 
-												alt="Daejeon | Watershow at the Expo Tower" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="umbrella.JPG" 
-												alt="Suncheon | Conical" /></span></div>
-										</div>
-
-										<div class="row">
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="hakone1_edited.jpg" 
-												alt="Hakone | Koinobori flying at Kintoki Shrine" /></span></div>
-											<div class="col-6"><span class="image fit"><img class="image_overlay js-dynamic-image" 
-												data-filename="osaka_rain_edited.jpg" 
-												alt="Osaka | A rainy but still busy street in Osaka" /></span></div>
-										</div>
-									</div>
-									<hr />
-								</section>
+								<div id="instagram-feed">
+                        			</div>
 							</section>
 					</div>
 			</div>
+
+			<template id="insta-post-template">
+				<div class="insta-post">
+					<div class="insta-header">
+						<div class="avatar-circle"></div>
+						<div class="header-info">
+							<a href="#" class="username">username</a>
+							<span class="location">Location</span>
+						</div>
+						<div class="options-btn" title="Download Image">•••</div>
+					</div>
+
+					<div class="carousel-wrapper">
+						<div class="nav-zone prev hidden" title="Scroll Left"></div>
+						<div class="nav-zone next" title="Scroll Right"></div>
+
+						<div class="insta-carousel">
+							</div>
+					</div>
+
+					<div class="insta-actions">
+						<i class="icon fa-heart-o"></i>
+						<i class="icon fa-comment-o"></i>
+						<i class="icon fa-paper-plane-o"></i>
+						<i class="icon fa-bookmark-o push-right"></i>
+					</div>
+
+					<div class="insta-footer">
+						<span class="username">username</span>
+						<span class="caption-text">Caption goes here.</span>
+					</div>
+				</div>
+			</template>
 
 		<!-- Scripts -->
             <script src="../assets/js/jquery.min.js"></script>
@@ -150,13 +100,14 @@
             <script src="../assets/js/breakpoints.min.js"></script>
             <script src="../assets/js/util.js"></script>
             <script src="../assets/js/main.js"></script>
+			<script src="photography.js"></script>
 
         <!-- The Modal -->
         <div id="myModal" class="modal">
             <img class="modal-content" id="image_box">
             <div id="caption"></div>
         </div>
-		<script src="../assets/js/image_overlay_handler.js"></script>
+		<script src="image_overlay_handler_photography_custom.js"></script>
         
         <!-- Script to handle dynamic image loading -->
         <script>

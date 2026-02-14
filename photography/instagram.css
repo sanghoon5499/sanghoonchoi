@@ -1,0 +1,185 @@
+#image_box {
+    /* Prevents blue selection highlight when dragging */
+    user-select: none;
+    -webkit-user-select: none;
+    
+    /* Indicates the image is interactive */
+    cursor: grab;
+    
+    /* Smooths out the transform */
+    transition: transform 0.1s ease-out;
+    
+    /* Prevents default touch actions like browser swipe-back */
+    touch-action: none;
+}
+
+/* Post Container */
+.insta-post {
+    background: white;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    /* Allow the width to grow based on the height, but cap it for readability */
+    margin: 0 auto 3rem auto; 
+    max-width: 800px; /* Increased from 600px to balance the new height */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* 1. Header */
+.insta-header {
+    display: flex;
+    align-items: center;
+    padding: 14px;
+    border-bottom: 1px solid #efefef;
+    height: 60px; /* Fixed height for header */
+}
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #eee;
+    background-image: url('../images/avatar.jpg');
+    background-size: cover;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+.header-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.2;
+    text-align: left;
+}
+.username {
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #262626;
+    text-decoration: none;
+    border-bottom: none !important;
+}
+.location {
+    font-size: 0.8em;
+    color: #262626;
+}
+.options-btn {
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0 8px;
+    border: none;
+    background: none;
+    box-shadow: none !important;
+    color: inherit !important;
+    line-height: 1;
+}
+
+/* 2. Carousel (UPDATED FOR HEIGHT) */
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color: #000;
+}
+
+.insta-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    height: auto;
+    background-color: #000;
+}
+.insta-carousel::-webkit-scrollbar { display: none; }
+.insta-carousel { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* NAVIGATION BUTTONS */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: opacity 0.2s, background-color 0.2s;
+    font-size: 0.8em;
+    color: #333; /* Dark arrow color */
+}
+
+.nav-zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20%; /* Active area width */
+    z-index: 20; /* Above the image */
+    cursor: pointer; /* Hand icon to indicate clickability */
+    
+    /* Debugging: Uncomment line below to see the zones in red/blue */
+    /* background-color: rgba(255, 0, 0, 0.2);  */
+}
+
+.nav-zone.prev {
+    left: 0;
+}
+
+.nav-zone.next {
+    right: 0;
+}
+
+/* Hide zones when at start/end of carousel */
+.nav-zone.hidden {
+    display: none; /* remove entirely so clicks pass through to the image */
+}
+
+.carousel-item {
+    min-width: 100%;
+    height: auto; /* Fill the container height */
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* For proper image centering */
+}
+.carousel-item img {
+    width: 100%;
+    max-height: 80vh;
+    object-fit: contain; /* Ensure the whole image is visible, never cropped */
+    display: block;
+}
+
+/* 3. Actions Bar */
+.insta-actions {
+    padding: 12px 14px 0 14px;
+    display: flex;
+    gap: 16px;
+    font-size: 1.5em;
+}
+.insta-actions i {
+    cursor: pointer;
+    color: #262626;
+    transition: color 0.2s;
+}
+.insta-actions i:hover { color: #8e8e8e; }
+.push-right { margin-left: auto; }
+
+/* 4. Footer / Caption */
+.insta-footer {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 0.95em;
+    color: #262626;
+    line-height: 1.4;
+}
+.caption-text {
+    margin-left: 6px;
+    font-weight: 400;
+}
