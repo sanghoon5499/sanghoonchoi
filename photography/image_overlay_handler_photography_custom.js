@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    // --- 5. MOUSE EVENTS (DESKTOP) ---
+    // --- 5. EVENTS (DESKTOP) ---
 
     // Wheel Zoom
     modalImg.addEventListener("wheel", function(e) {
@@ -182,5 +182,12 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("mouseup", function() {
         isDragging = false;
         modalImg.style.cursor = "grab";
+    });
+
+    // --- ESCAPE KEY LISTENER ---
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape" && modal.style.display === "flex") {
+            closeModal();
+        }
     });
 });

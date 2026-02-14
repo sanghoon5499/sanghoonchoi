@@ -142,7 +142,8 @@
 
 .carousel-item {
     min-width: 100%;
-    height: auto; /* Fill the container height */
+    height: auto;
+    scroll-snap-stop: always;
     scroll-snap-align: center;
     display: flex;
     align-items: center;

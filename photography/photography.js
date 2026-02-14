@@ -56,17 +56,65 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container || !template) return;
 
     posts.forEach(post => {
-        // 1. CLONE TEMPLATE FIRST (Critical Step)
+        // 1. Clone Template
         const clone = template.content.cloneNode(true);
         
-        // 2. Select Elements needed for logic
+        // 2. Select Elements
         const carousel = clone.querySelector('.insta-carousel');
         const prevZone = clone.querySelector('.nav-zone.prev');
         const nextZone = clone.querySelector('.nav-zone.next');
         const locationEl = clone.querySelector('.location');
         const captionEl = clone.querySelector('.caption-text');
         
-        // 3. Invisible Zone Logic
+        // 3. Populate Data
+        clone.querySelectorAll('.username').forEach(el => el.textContent = post.username);
+        locationEl.textContent = post.content[0].location;
+        captionEl.textContent = post.content[0].caption;
+
+        // 4. Define the Zone Update Logic FIRST (so we can use it in loop)
+        const updateZones = () => {
+            const tolerance = 10;
+            const scrollLeft = carousel.scrollLeft;
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+            // Start Logic
+            if (scrollLeft <= tolerance) {
+                prevZone.classList.add('hidden');
+            } else {
+                prevZone.classList.remove('hidden');
+            }
+
+            // End Logic
+            // If maxScroll is 0 (images loading), don't hide 'next' yet.
+            if (maxScroll > 0 && scrollLeft >= maxScroll - tolerance) {
+                nextZone.classList.add('hidden');
+            } else {
+                nextZone.classList.remove('hidden');
+            }
+        };
+
+        // 5. Build Carousel & Attach Load Listeners
+        post.content.forEach((item) => {
+            const imgDiv = document.createElement('div');
+            imgDiv.className = 'carousel-item';
+            
+            const img = document.createElement('img');
+            img.src = PHOTO_IMG_BASE + item.filename;
+            img.alt = item.caption;
+            img.dataset.location = item.location;
+            img.dataset.caption = item.caption;
+            img.classList.add('image_overlay'); 
+            
+            // CRITICAL FIX: Re-check buttons when this image finishes loading
+            img.onload = () => {
+                updateZones();
+            };
+
+            imgDiv.appendChild(img);
+            carousel.appendChild(imgDiv);
+        });
+
+        // 6. Scroll Listeners
         if (prevZone) {
             prevZone.addEventListener('click', (e) => {
                 e.stopPropagation(); 
@@ -81,53 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 4. Hide/Show Zones based on scroll position
-        const updateZones = () => {
-            const tolerance = 10;
-            const scrollLeft = carousel.scrollLeft;
-            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-
-            if (scrollLeft <= tolerance) {
-                prevZone.classList.add('hidden');
-            } else {
-                prevZone.classList.remove('hidden');
-            }
-
-            if (scrollLeft >= maxScroll - tolerance) {
-                nextZone.classList.add('hidden');
-            } else {
-                nextZone.classList.remove('hidden');
-            }
-        };
-
         carousel.addEventListener('scroll', updateZones);
-        // Delay initial check slightly to ensure rendering is done
+        
+        // Initial check (in case cached)
         setTimeout(updateZones, 100);
-
-        // 5. Populate Data
-        clone.querySelectorAll('.username').forEach(el => el.textContent = post.username);
-        locationEl.textContent = post.content[0].location;
-        captionEl.textContent = post.content[0].caption;
-
-        // 6. Build Carousel Images
-        post.content.forEach((item) => {
-            const imgDiv = document.createElement('div');
-            imgDiv.className = 'carousel-item';
-            
-            const img = document.createElement('img');
-            img.src = PHOTO_IMG_BASE + item.filename;
-            img.alt = item.caption;
-            
-            // Store metadata on the DOM element for the Observer
-            img.dataset.location = item.location;
-            img.dataset.caption = item.caption;
-            
-            // Add click-to-open-modal class
-            img.classList.add('image_overlay'); 
-            
-            imgDiv.appendChild(img);
-            carousel.appendChild(imgDiv);
-        });
 
         // 7. Download Button Logic
         const dotsBtn = clone.querySelector('.options-btn');
@@ -177,9 +182,6 @@ function setupObserver(carousel, locationEl, captionEl) {
     carousel.querySelectorAll('.carousel-item').forEach(item => observer.observe(item));
 }
 
-/**
- * Helper to find the currently visible image
- */
 function getVisibleImage(carousel) {
     const scrollLeft = carousel.scrollLeft;
     const width = carousel.offsetWidth;
