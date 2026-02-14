@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById("myModal");
     const modalImg = document.getElementById("image_box");
     const closeBtn = document.getElementsByClassName("close")[0];
-    const captionText = document.getElementById("caption");
 
     // Variables for Zoom & Pan
     let scale = 1;
