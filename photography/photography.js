@@ -10,7 +10,7 @@ const sanghoon = "Sanghoon Choi";
 const posts = [
     {
         id: "japan_trip",
-        avatar: "images/avatar.jpg", 
+        avatar: "avatar.png", 
         username: sanghoon,
         content: [
             { filename: "cat_street_edited.jpg", location: "Shibuya, Tokyo", caption: "Cat Street. A busy intersection in front of Mr Brothers Cut Club" },
@@ -24,7 +24,7 @@ const posts = [
     },
     {
         id: "korea_trip",
-        avatar: "images/avatar.jpg", 
+        avatar: "avatar.png", 
         username: sanghoon,
         content: [
             { filename: "palace1_edited.jpg", location: "Gwanghwamun, Seoul", caption: "Hanbok experience at Gwanghwamun" },
@@ -37,7 +37,7 @@ const posts = [
     },
     {
         id: "canada_life",
-        avatar: "images/avatar.jpg", 
+        avatar: "avatar.png", 
         username: sanghoon,
         content: [
             { filename: "pizza.JPG", location: "Toronto, Ontario", caption: "Pizzeria Libretto" },
