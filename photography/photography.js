@@ -14,11 +14,15 @@ const posts = [
         username: sanghoon,
         content: [
             { filename: "cat_street_edited.jpg", location: "Shibuya, Tokyo", caption: "Cat Street. A busy intersection in front of Mr Brothers Cut Club" },
+            { filename: "car.JPG", location: "Okubo, Tokyo", caption: "1986 Suzuki Cervo with RS Watanabes" },
             { filename: "ginza_edited.jpg", location: "Ginza, Tokyo", caption: "A quiet slice of the workday in Ginza" },
             { filename: "kamakura_beach_edited.jpg", location: "Kamakura, Kanagawa", caption: "Mt. Fuji from the beaches of Kamakura" },
+            { filename: "train_guy.JPG", location: "Hakone, Kanagawa", caption: "The train operator notices my camera" },
             { filename: "hakone2_edited.jpg", location: "Hakone, Kanagawa", caption: "Mt. Hakone as seen from Mt. Ashigara" },
             { filename: "nara_gate_edited.jpg", location: "Nara Park, Nara", caption: "One of many Torii gates in the park" },
             { filename: "nara_man_edited.jpg", location: "Nara Park, Nara", caption: "Street crossing" },
+            { filename: "kimono_shop.JPG", location: "Nakagyo, Kyoto", caption: "Kimono rental service" },
+            { filename: "singer.JPG", location: "Hyogo, Kobe", caption: "A young girl watches a performer" },
             { filename: "osaka_rain_edited.jpg", location: "Nishinari Ward, Osaka", caption: "A rainy but still busy street in Osaka" }
         ]
     },
