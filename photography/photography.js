@@ -171,16 +171,16 @@ function setupObserver(carousel, locationEl, captionEl) {
         threshold: 0.6 
     };
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target.querySelector('img');
-                if (img) {
-                    locationEl.textContent = img.dataset.location;
-                    captionEl.textContent = img.dataset.caption;
-                }
-            }
-        });
+    const observer = new IntersectionObserver(() => {
+        // Whenever elements enter or leave the viewport (especially during 
+        // the initial layout shift), use the math-based helper function 
+        // to guarantee the text matches the actual scroll position.
+        const img = getVisibleImage(carousel);
+        
+        if (img) {
+            locationEl.textContent = img.dataset.location;
+            captionEl.textContent = img.dataset.caption;
+        }
     }, options);
 
     carousel.querySelectorAll('.carousel-item').forEach(item => observer.observe(item));
