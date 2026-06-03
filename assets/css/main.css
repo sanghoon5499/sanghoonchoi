@@ -3492,11 +3492,25 @@ input, select, textarea {
 
 		}
 
+		@media screen and (orientation: portrait) {
+			#intro {
+				-moz-justify-content: -moz-flex-end;
+				-webkit-justify-content: -webkit-flex-end;
+				-ms-justify-content: -ms-flex-end;
+				justify-content: flex-end;
+				min-height: 65vh;
+			}
+
+			#intro + #header {
+				margin-top: -10rem;
+			}
+		}
+
 		@media screen and (max-width: 736px) {
 
 			#intro {
 				padding: 3rem 2rem 1rem 2rem ;
-				min-height: 80vh;
+				min-height: 35vh;
 			}
 
 				#intro h1 {
