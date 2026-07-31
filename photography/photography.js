@@ -45,7 +45,7 @@ const posts = [
         username: sanghoon,
         content: [
             { filename: "pizza.JPG", location: "Toronto, Ontario", caption: "Pizzeria Libretto" },
-            { filename: "stcatherines.JPG", location: "St. Catharines, Ontario", caption: "Toronto from St. Catherines' beach" }
+            { filename: "stcatherines.JPG", location: "St. Catharines, Ontario", caption: "Toronto from St. Catharines' beach" }
         ]
     }
 ];
