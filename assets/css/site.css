@@ -171,3 +171,13 @@ img {
         display: none;
     }
 }
+
+.site-credit {
+    color: #717981;
+    font-size: 0.8rem;
+    padding: 2rem;
+}
+
+.site-credit p {
+    margin: 0;
+}

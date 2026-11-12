@@ -17,9 +17,12 @@ function createClassList(initialClasses = []) {
 }
 
 function createEventTarget(properties = {}) {
+    const attributes = new Map();
     const listeners = new Map();
     return {
         ...properties,
+        attributes,
+        focused: false,
         addEventListener(type, listener) {
             const eventListeners = listeners.get(type) || [];
             eventListeners.push(listener);
@@ -33,6 +36,12 @@ function createEventTarget(properties = {}) {
                     ...event,
                 });
             }
+        },
+        focus() {
+            this.focused = true;
+        },
+        setAttribute(name, value) {
+            attributes.set(name, value);
         },
     };
 }
@@ -61,6 +70,14 @@ function createModalEnvironment({ zoomEnabled = false } = {}) {
         style: { display: "none" },
     });
     const body = createEventTarget({ style: { overflow: "" } });
+    const image = createEventTarget({
+        alt: "Test caption",
+        classList: createClassList(["image_overlay"]),
+        closest(selector) {
+            return selector === "img.image_overlay" ? this : null;
+        },
+        src: "https://example.test/image.jpg",
+    });
     const document = createEventTarget({
         body,
         getElementById(id) {
@@ -68,14 +85,6 @@ function createModalEnvironment({ zoomEnabled = false } = {}) {
         },
     });
     const window = createEventTarget();
-    const image = {
-        alt: "Test caption",
-        classList: createClassList(["image_overlay"]),
-        closest(selector) {
-            return selector === "img.image_overlay" ? this : null;
-        },
-        src: "https://example.test/image.jpg",
-    };
 
     runHandler({
         document,
@@ -91,14 +100,27 @@ function createModalEnvironment({ zoomEnabled = false } = {}) {
 
 function testGenericModal() {
     const environment = createModalEnvironment();
+
+    assert.equal(environment.modal.attributes.get("role"), "dialog");
+    assert.equal(environment.modal.attributes.get("aria-hidden"), "true");
+
     environment.body.dispatch("click", { target: environment.image });
 
     assert.equal(environment.modal.style.display, "flex", "Modal should open");
+    assert.equal(environment.modal.attributes.get("aria-hidden"), "false");
+    assert.equal(environment.modal.focused, true, "Modal should receive focus when opened");
     assert.equal(environment.modalImage.src, environment.image.src, "Modal should show the selected image");
+    assert.equal(environment.modalImage.alt, environment.image.alt, "Modal image should retain the alternative text");
     assert.equal(environment.caption.textContent, environment.image.alt, "Modal should show the image caption");
+
+    environment.modal.focused = false;
+    environment.document.dispatch("keydown", { key: "Tab" });
+    assert.equal(environment.modal.focused, true, "Tab should keep focus in the modal");
 
     environment.document.dispatch("keydown", { key: "Escape" });
     assert.equal(environment.modal.style.display, "none", "Modal should close on Escape");
+    assert.equal(environment.modal.attributes.get("aria-hidden"), "true");
+    assert.equal(environment.image.focused, true, "Closing should return focus to the source image");
 }
 
 function testZoomableModal() {

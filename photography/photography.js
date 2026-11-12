@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
             item.className = "carousel-item";
 
             const image = document.createElement("img");
+            image.loading = "lazy";
+            image.decoding = "async";
             image.src = data.imageBase + photo.filename;
             image.alt = photo.caption;
             image.dataset.location = photo.location;

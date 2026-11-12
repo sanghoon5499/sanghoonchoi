@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "..");
 const excludedDirectories = new Set([".git", "node_modules"]);
-const excludedPagePrefixes = ["templates/", "travel_blogs/backburner/", "unreleased/"];
+const excludedPagePrefixes = ["templates/", "unreleased/"];
 const checkedSourceExtensions = new Set([
     ".css",
     ".html",
@@ -90,6 +90,10 @@ function checkMarkupSanity(file, content) {
 
     if (/<p\b[^>]*>(?:(?!<\/p>)[\s\S])*?<p\b/i.test(markup)) {
         failures.push(`${relativePath(file)}: paragraph elements must not be nested`);
+    }
+
+    if (/\bhref\s*=\s*(["'])#?\1/i.test(markup)) {
+        failures.push(`${relativePath(file)}: links must not use empty or placeholder destinations`);
     }
 
     for (const element of pairedElements) {
@@ -222,9 +226,7 @@ const publishedHtmlFiles = htmlFiles.filter((file) => {
     const relative = relativePath(file);
     return !excludedPagePrefixes.some((prefix) => relative.startsWith(prefix));
 });
-const maintainedHtmlFiles = htmlFiles.filter((file) => {
-    return !relativePath(file).startsWith("travel_blogs/backburner/");
-});
+const maintainedHtmlFiles = htmlFiles;
 const projectJavaScriptFiles = files.filter((file) => {
     const relative = relativePath(file);
     return [".js", ".mjs"].includes(path.extname(file)) && !relative.endsWith(".min.js");
@@ -262,6 +264,6 @@ if (failures.length > 0) {
     console.log(
         `Site checks passed: ${publishedHtmlFiles.length} published HTML pages, `
         + `${projectJavaScriptFiles.length} project JavaScript files, `
-        + `${excludedPageCount} draft or archived HTML pages excluded.`,
+        + `${excludedPageCount} template or draft HTML pages excluded.`,
     );
 }
