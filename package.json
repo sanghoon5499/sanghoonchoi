@@ -1,0 +1,12 @@
+{
+    "name": "sanghoonchoi-site",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Development checks for sanghoonchoi.com",
+    "scripts": {
+        "check": "node scripts/check-site.mjs"
+    },
+    "engines": {
+        "node": ">=18"
+    }
+}
