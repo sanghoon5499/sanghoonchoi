@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const travelData = readFileSync(path.join(repositoryRoot, "travel/travel_blogs.js"), "utf8");
+const travelData = readFileSync(path.join(repositoryRoot, "travel/blog_data.js"), "utf8");
 const articleLinks = [...travelData.matchAll(/\blink:\s*"([^"]+)"/g)]
     .map((match) => match[1])
     .filter((link) => link.includes("travel_blogs/"));

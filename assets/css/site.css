@@ -154,3 +154,20 @@ img {
 .clear-float {
     clear: both;
 }
+
+/* Preserve the final empty grid cell without a blank content record. */
+#main > .posts.has-odd-cards::after {
+    border-color: #eeeeee;
+    border-left-width: 2px;
+    border-style: solid;
+    border-top-width: 2px;
+    box-sizing: border-box;
+    content: "";
+    width: 50%;
+}
+
+@media screen and (max-width: 736px) {
+    #main > .posts.has-odd-cards::after {
+        display: none;
+    }
+}
