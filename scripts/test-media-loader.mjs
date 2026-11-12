@@ -73,7 +73,10 @@ vm.runInNewContext(source, { document }, { filename: loaderPath });
 domContentLoaded();
 
 assert.equal(image.src, "https://media.example.test/images/photo.jpg");
+assert.equal(image.loading, "lazy", "Images should load only as they approach the viewport");
+assert.equal(image.decoding, "async", "Image decoding should not block rendering");
 assert.equal(video.src, "https://media.example.test/images/clip.mp4");
+assert.equal(video.preload, "metadata", "Videos should avoid eager full downloads");
 assert.equal(video.loadCount, 1, "Videos should reload after their source changes");
 assert.equal(audioSource.src, "https://media.example.test/audio/voiceover.mp3");
 assert.equal(audio.loadCount, 1, "Parent audio elements should reload after source changes");

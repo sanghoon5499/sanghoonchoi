@@ -22,7 +22,7 @@ maintain without limiting page-specific layouts.
   blogs and coffee articles.
 - `docs/content-data.md` explains how to add travel cards, projects, and photo
   collections without changing rendering code.
-- `unreleased/` and `travel_blogs/backburner/` contain draft or archived pages.
+- `unreleased/` contains draft pages.
 
 ## Local workflow
 
@@ -70,16 +70,23 @@ For another page type:
 
 - JavaScript syntax for project-owned scripts
 - shared media-loader behavior for images, video, and audio
-- modal open, caption, keyboard-close, and optional zoom behavior
+- modal open, caption, keyboard, focus, and optional zoom behavior
+- semantic photography controls and embedded content labels
 - one document shell per published HTML page
 - balanced common HTML elements and valid break markup
 - duplicate HTML IDs and class attributes
 - missing local links, media, script, and stylesheet dependencies
 - clean travel URLs, canonical links, and legacy redirect pages
 - required and unique travel, project, and photography data
+- removal of obsolete template demo pages and controls
 - shared stylesheet, media-loader, and modal-handler contracts
 - unresolved merge-conflict markers
 
-Draft and archived HTML under `unreleased/` and `travel_blogs/backburner/` is not
-part of the default published-page check. The checks will expand as existing
+Draft HTML under `unreleased/` is not part of the default published-page check. The checks will expand as existing
 markup issues are fixed in later cleanup iterations.
+
+## Credit
+
+The site design is based on [Massively](https://html5up.net/massively) by
+[HTML5 UP](https://html5up.net/), used under the Creative Commons Attribution
+3.0 license. Original license notices remain in the vendor source files.

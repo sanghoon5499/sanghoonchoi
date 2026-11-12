@@ -15,6 +15,13 @@
                 return;
             }
 
+            if (element.tagName === "IMG") {
+                element.loading = "lazy";
+                element.decoding = "async";
+            } else if (element.tagName === "VIDEO") {
+                element.preload = "metadata";
+            }
+
             element.src = resourceBase + filename;
 
             if (element.tagName === "VIDEO") {

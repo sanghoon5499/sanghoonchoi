@@ -12,6 +12,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const configuredCloseDuration = Number.parseInt(modal.dataset.closeDuration || "300", 10);
     const closeDuration = Number.isFinite(configuredCloseDuration) ? configuredCloseDuration : 300;
 
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-hidden", "true");
+    modal.setAttribute("aria-label", "Image preview");
+    modal.setAttribute("aria-describedby", "caption");
+    modal.tabIndex = -1;
+
+    let triggerElement = null;
     let scale = 1;
     let translateX = 0;
     let translateY = 0;
@@ -32,8 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function openModal(image) {
+        triggerElement = image;
         modal.style.display = "flex";
+        modal.setAttribute("aria-hidden", "false");
         modalImg.src = image.src;
+        modalImg.alt = image.alt || "";
         captionText.textContent = image.alt || "";
         modalImg.classList.remove("zoom-out");
 
@@ -42,17 +53,24 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.style.overflow = "hidden";
             resetZoom();
         }
+
+        modal.focus({ preventScroll: true });
     }
 
     function closeModal() {
         modalImg.classList.add("zoom-out");
         setTimeout(() => {
             modal.style.display = "none";
+            modal.setAttribute("aria-hidden", "true");
             modalImg.classList.remove("zoom-out");
 
             if (zoomEnabled) {
                 document.body.style.overflow = previousBodyOverflow;
                 resetZoom();
+            }
+
+            if (triggerElement) {
+                triggerElement.focus({ preventScroll: true });
             }
         }, closeDuration);
     }
@@ -79,8 +97,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape" && modal.style.display === "flex") {
+        if (modal.style.display !== "flex") {
+            return;
+        }
+
+        if (event.key === "Escape") {
             closeModal();
+        } else if (event.key === "Tab") {
+            event.preventDefault();
+            modal.focus({ preventScroll: true });
         }
     });
 
