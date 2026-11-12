@@ -154,6 +154,32 @@ function checkLocalDependencies(file, content) {
     }
 }
 
+function checkSharedAssetUsage(file, content) {
+    const relative = relativePath(file);
+    const hasTemplateStyles = /assets\/css\/main\.css/.test(content);
+    const hasSiteStyles = /assets\/css\/site\.css/.test(content);
+    const hasDynamicMedia = /js-dynamic-(?:audio|image)/.test(content);
+    const hasSharedMediaLoader = /assets\/js\/media_loader\.js/.test(content);
+    const hasModal = /id\s*=\s*(["'])myModal\1/.test(content);
+    const hasSharedModalHandler = /assets\/js\/image_overlay_handler\.js/.test(content);
+
+    if (hasTemplateStyles && !hasSiteStyles) {
+        failures.push(`${relative}: template styles must be followed by the shared site stylesheet`);
+    }
+
+    if (hasDynamicMedia && !hasSharedMediaLoader) {
+        failures.push(`${relative}: dynamic media requires the shared media loader`);
+    }
+
+    if (hasModal && !hasSharedModalHandler) {
+        failures.push(`${relative}: image modal requires the shared modal handler`);
+    }
+
+    if (/const\s+(?:audioResourcePrefix|resourcePrefix)\s*=/.test(content)) {
+        failures.push(`${relative}: inline media loader must use the shared media loader`);
+    }
+}
+
 function checkJavaScriptSyntax(file) {
     const result = spawnSync(process.execPath, ["--check", file], {
         encoding: "utf8",
@@ -178,6 +204,9 @@ const publishedHtmlFiles = htmlFiles.filter((file) => {
     const relative = relativePath(file);
     return !excludedPagePrefixes.some((prefix) => relative.startsWith(prefix));
 });
+const maintainedHtmlFiles = htmlFiles.filter((file) => {
+    return !relativePath(file).startsWith("travel_blogs/backburner/");
+});
 const projectJavaScriptFiles = files.filter((file) => {
     const relative = relativePath(file);
     return [".js", ".mjs"].includes(path.extname(file)) && !relative.endsWith(".min.js");
@@ -192,7 +221,12 @@ for (const file of publishedHtmlFiles) {
     checkDocumentStructure(file, content);
     checkDuplicateIds(file, content);
     checkMarkupSanity(file, content);
+}
+
+for (const file of maintainedHtmlFiles) {
+    const content = readFileSync(file, "utf8");
     checkLocalDependencies(file, content);
+    checkSharedAssetUsage(file, content);
 }
 
 for (const file of projectJavaScriptFiles) {

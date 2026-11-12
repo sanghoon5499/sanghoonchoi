@@ -5,6 +5,7 @@ import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const handlerPath = "assets/js/image_overlay_handler.js";
 
 function createClassList(initialClasses = []) {
     const classes = new Set(initialClasses);
@@ -26,55 +27,22 @@ function createEventTarget(properties = {}) {
         },
         dispatch(type, event = {}) {
             for (const listener of listeners.get(type) || []) {
-                listener.call(this, { target: this, ...event });
+                listener.call(this, {
+                    preventDefault() {},
+                    target: this,
+                    ...event,
+                });
             }
         },
     };
 }
 
-function runScript(relativePath, globals) {
-    const source = readFileSync(path.join(repositoryRoot, relativePath), "utf8");
-    vm.runInNewContext(source, globals, { filename: relativePath });
+function runHandler(globals) {
+    const source = readFileSync(path.join(repositoryRoot, handlerPath), "utf8");
+    vm.runInNewContext(source, globals, { filename: handlerPath });
 }
 
-function testGenericHandler(relativePath) {
-    const modalImage = createEventTarget({
-        classList: createClassList(),
-        src: "",
-    });
-    const caption = { textContent: "" };
-    const modal = createEventTarget({
-        querySelector: () => null,
-        style: { display: "none" },
-    });
-    const image = createEventTarget({
-        alt: "Test caption",
-        src: "https://example.test/image.jpg",
-    });
-    const document = createEventTarget({
-        getElementById(id) {
-            return { myModal: modal, image_box: modalImage, caption }[id] || null;
-        },
-        querySelectorAll: (selector) => selector === "img.image_overlay" ? [image] : [],
-    });
-
-    runScript(relativePath, {
-        document,
-        setTimeout: (callback) => callback(),
-    });
-
-    document.dispatch("DOMContentLoaded");
-    image.dispatch("click");
-
-    assert.equal(modal.style.display, "flex", `${relativePath} should open the modal`);
-    assert.equal(modalImage.src, image.src, `${relativePath} should display the selected image`);
-    assert.equal(caption.textContent, image.alt, `${relativePath} should display the image caption`);
-
-    document.dispatch("keydown", { key: "Escape" });
-    assert.equal(modal.style.display, "none", `${relativePath} should close on Escape`);
-}
-
-function testPhotographyHandler() {
+function createModalEnvironment({ zoomEnabled = false } = {}) {
     const modalImage = createEventTarget({
         classList: createClassList(),
         clientHeight: 600,
@@ -86,10 +54,13 @@ function testPhotographyHandler() {
     const modal = createEventTarget({
         clientHeight: 600,
         clientWidth: 800,
+        dataset: zoomEnabled
+            ? { closeDuration: "200", zoomable: "true" }
+            : {},
         querySelector: () => null,
         style: { display: "none" },
     });
-    const body = createEventTarget({ style: {} });
+    const body = createEventTarget({ style: { overflow: "" } });
     const document = createEventTarget({
         body,
         getElementById(id) {
@@ -98,31 +69,57 @@ function testPhotographyHandler() {
     });
     const window = createEventTarget();
     const image = {
-        alt: "Photography caption",
+        alt: "Test caption",
         classList: createClassList(["image_overlay"]),
-        src: "https://example.test/photo.jpg",
+        closest(selector) {
+            return selector === "img.image_overlay" ? this : null;
+        },
+        src: "https://example.test/image.jpg",
     };
 
-    runScript("photography/image_overlay_handler_photography_custom.js", {
+    runHandler({
         document,
         Math,
+        Number,
         setTimeout: (callback) => callback(),
         window,
     });
-
     document.dispatch("DOMContentLoaded");
-    body.dispatch("click", { target: image });
 
-    assert.equal(modal.style.display, "flex", "Photography handler should open the modal");
-    assert.equal(modalImage.src, image.src, "Photography handler should display the selected image");
-    assert.equal(caption.textContent, image.alt, "Photography handler should display the caption");
-
-    document.dispatch("keydown", { key: "Escape" });
-    assert.equal(modal.style.display, "none", "Photography handler should close on Escape");
+    return { body, caption, document, image, modal, modalImage };
 }
 
-testGenericHandler("assets/js/image_overlay_handler.js");
-testGenericHandler("travel_blogs/image_overlay_handler.js");
-testPhotographyHandler();
+function testGenericModal() {
+    const environment = createModalEnvironment();
+    environment.body.dispatch("click", { target: environment.image });
+
+    assert.equal(environment.modal.style.display, "flex", "Modal should open");
+    assert.equal(environment.modalImage.src, environment.image.src, "Modal should show the selected image");
+    assert.equal(environment.caption.textContent, environment.image.alt, "Modal should show the image caption");
+
+    environment.document.dispatch("keydown", { key: "Escape" });
+    assert.equal(environment.modal.style.display, "none", "Modal should close on Escape");
+}
+
+function testZoomableModal() {
+    const environment = createModalEnvironment({ zoomEnabled: true });
+    environment.body.dispatch("click", { target: environment.image });
+
+    assert.equal(environment.body.style.overflow, "hidden", "Zoomable modal should lock page scrolling");
+    assert.equal(
+        environment.modalImage.style.transform,
+        "translate(0px, 0px) scale(1)",
+        "Zoomable modal should reset its transform when opened",
+    );
+
+    environment.modalImage.dispatch("dblclick");
+    assert.match(environment.modalImage.style.transform, /scale\(2\.5\)$/, "Double-click should zoom in");
+
+    environment.document.dispatch("keydown", { key: "Escape" });
+    assert.equal(environment.body.style.overflow, "", "Closing should restore page scrolling");
+}
+
+testGenericModal();
+testZoomableModal();
 
 console.log("Modal handler tests passed.");

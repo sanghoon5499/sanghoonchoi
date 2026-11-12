@@ -1,0 +1,84 @@
+img {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#myModal .modal-content:hover {
+    cursor: default !important;
+    opacity: 1 !important;
+}
+
+.modal {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    box-sizing: border-box;
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    overflow: auto;
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.modal-content {
+    bottom: 0;
+    display: block;
+    left: 0;
+    max-height: 90vh;
+    max-width: 90vw;
+    right: 0;
+    top: 0;
+}
+
+#caption {
+    color: #ccc;
+    display: block;
+    height: auto;
+    margin: 10px auto;
+    max-width: 700px;
+    padding: 10px 0;
+    text-align: center;
+    width: 80%;
+}
+
+@media only screen and (max-width: 700px) {
+    .modal-content {
+        width: 100%;
+    }
+}
+
+.modal-content,
+#caption {
+    animation-duration: 0.3s;
+    animation-name: zoom;
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.modal-content.zoom-out {
+    animation: zoom-out 0.2s forwards;
+}
+
+@keyframes zoom-out {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(0);
+    }
+}
