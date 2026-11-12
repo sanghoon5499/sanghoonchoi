@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/x-icon" href="https://storage.googleapis.com/sc-travel-blog/favicon2.png">
 		<link rel="stylesheet" href="../../../assets/css/main.css" />
+		<link rel="stylesheet" href="../../../assets/css/site.css" />
 		<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 		<noscript><link rel="stylesheet" href="../../../assets/css/noscript.css" /></noscript>
 	</head>
@@ -468,28 +469,8 @@
 			<img class="modal-content" id="image_box">
 			<div id="caption"></div>
 		</div>
-		<script src="../../../travel_blogs/image_overlay_handler.js"></script>
+		<script src="../../../assets/js/image_overlay_handler.js"></script>
 
-		<!-- Script to handle dynamic image loading -->
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Define the base URL as a variable for easy management
-                const resourcePrefix = "https://storage.googleapis.com/sc-coffee/overview/";
-
-                // Get all images with the 'js-dynamic-image' class
-                const images = document.querySelectorAll('.js-dynamic-image');
-
-                // Loop through each image and set its source dynamically
-                images.forEach(image => {
-                    // Get the filename from the data-filename attribute
-                    const filename = image.getAttribute('data-filename');
-
-                    // If a filename is present, construct the full URL and set the src
-                    if (filename) {
-                        image.src = resourcePrefix + filename;
-                    }
-                });
-            });
-        </script>
+        <script src="../../../assets/js/media_loader.js" data-media-base="https://storage.googleapis.com/sc-coffee/overview/"></script>
 	</body>
 </html>

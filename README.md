@@ -8,7 +8,9 @@ maintain without limiting page-specific layouts.
 ## Repository structure
 
 - `index.html` is the home page.
-- `assets/` contains the HTML5 UP styles, scripts, fonts, and shared site code.
+- `assets/` contains HTML5 UP files plus shared site styles and behavior.
+  `assets/css/main.css` remains template-owned; custom styles belong in
+  `assets/css/site.css`.
 - `travel/` contains the travel index and its card data.
 - `travel_blogs/` contains individually authored travel articles.
 - `coffee/` contains coffee articles and reviews.
@@ -40,9 +42,13 @@ Then open `http://127.0.0.1:8000` in a browser. Stop the server with `Ctrl+C`.
 3. Write the page content directly in HTML and customize its layout as needed.
 4. For an indexed travel post or project, add its card data to the corresponding
    JavaScript file in `travel/` or `resume/`.
-5. Follow the existing `data-filename` and resource-prefix pattern for remote
-   media until the shared media loader is introduced.
-6. Run `npm run check`, preview the affected desktop and mobile layouts, and
+5. For remote media, add `js-dynamic-image` and `data-filename` to the media
+   element, then load `assets/js/media_loader.js` with the page's
+   `data-media-base` URL. Use `data-audio-base` when audio has a different base.
+6. Pages with an image modal should load the shared
+   `assets/js/image_overlay_handler.js`. Add `data-zoomable="true"` to the modal
+   only when zoom and pan controls are needed.
+7. Run `npm run check`, preview the affected desktop and mobile layouts, and
    inspect the browser console before committing.
 
 ## Development checks
@@ -50,11 +56,13 @@ Then open `http://127.0.0.1:8000` in a browser. Stop the server with `Ctrl+C`.
 `npm run check` performs fast checks without changing files:
 
 - JavaScript syntax for project-owned scripts
-- modal open, caption, and keyboard-close regression tests
+- shared media-loader behavior for images, video, and audio
+- modal open, caption, keyboard-close, and optional zoom behavior
 - one document shell per published HTML page
 - balanced common HTML elements and valid break markup
 - duplicate HTML IDs
 - missing local links, media, script, and stylesheet dependencies
+- shared stylesheet, media-loader, and modal-handler contracts
 - unresolved merge-conflict markers
 
 Draft and archived HTML under `unreleased/` and `travel_blogs/backburner/` is not

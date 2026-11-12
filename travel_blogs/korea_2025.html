@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/x-icon" href="https://storage.googleapis.com/sc-travel-blog/favicon2.png">
         <link rel="stylesheet" href="../assets/css/main.css" />
+        <link rel="stylesheet" href="../assets/css/site.css" />
         <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
 
         <style>
@@ -481,33 +482,7 @@
         </div>
         <script src="../assets/js/image_overlay_handler.js"></script>
         
-        <!-- Script to handle dynamic image loading -->
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Define the base URL as a variable for easy management
-                const resourcePrefix = "https://storage.googleapis.com/sc-travel-blog/blog-korea2025/";
-
-                // Get all elements with the 'js-dynamic-image' class, including video
-                const mediaElements = document.querySelectorAll('.js-dynamic-image');
-
-                // Loop through each element and set its source dynamically
-                mediaElements.forEach(element => {
-                    // Get the filename from the data-filename attribute
-                    const filename = element.getAttribute('data-filename');
-
-                    // If a filename is present, construct the full URL and set the src
-                    if (filename) {
-                        const fullPath = resourcePrefix + filename;
-                        if (element.tagName === 'IMG') {
-                            element.src = fullPath;
-                        } else if (element.tagName === 'VIDEO') {
-                            element.src = fullPath;
-                            element.load(); // Call .load() to begin buffering the video
-                        }
-                    }
-                });
-            });
-        </script>
+        <script src="../assets/js/media_loader.js" data-media-base="https://storage.googleapis.com/sc-travel-blog/blog-korea2025/"></script>
 
     </body>
 </html>
