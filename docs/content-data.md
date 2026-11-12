@@ -21,7 +21,8 @@ Edit `travel/blog_data.js` and add an item to `items`:
 ```
 
 Omit `titleLine2` when the title fits on one line. The link must use the clean
-trailing-slash article URL.
+trailing-slash article URL. Keep `image` set to the original JPEG/PNG filename;
+the renderer displays its WebP counterpart and retains the original as fallback.
 
 ## Add a project
 
@@ -60,7 +61,9 @@ Edit `photography/photo_data.js` and add a collection:
 ```
 
 Add more objects to `photos` in the order they should appear in the carousel.
-The shared `imageBase` and `username` values apply to every collection.
+The shared `imageBase` and `username` values apply to every collection. Keep each
+`filename` on its original extension; WebP display and original fallback are
+automatic.
 
 ## Validate
 

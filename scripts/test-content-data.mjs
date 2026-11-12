@@ -32,6 +32,19 @@ function requireScriptOrder(pagePath, dataScript, rendererScript) {
     assert.ok(rendererPosition > dataPosition, `${pagePath} must load data before its renderer`);
 }
 
+function requireWebpPreference(pagePath) {
+    const page = readFileSync(path.join(repositoryRoot, pagePath), "utf8");
+    assert.match(
+        page,
+        /<script[^>]+media_loader\.js[^>]+data-prefer-webp="true"[^>]*>/,
+        `${pagePath} must prefer WebP through the shared media loader`,
+    );
+}
+
+function requireOriginalImageName(filename, field) {
+    assert.ok(!filename.endsWith(".webp"), `${field} must retain the original fallback filename`);
+}
+
 const travel = loadData("travel/blog_data.js").travelBlogs;
 requireText(travel.imageBase, "travel imageBase");
 assert.ok(travel.items.length > 0, "travel items must not be empty");
@@ -39,11 +52,13 @@ for (const [index, blog] of travel.items.entries()) {
     for (const field of ["title", "date", "image", "link", "description", "buttonText"]) {
         requireText(blog[field], `travel item ${index} ${field}`);
     }
+    requireOriginalImageName(blog.image, `travel item ${index} image`);
     if (blog.titleLine2 !== undefined) {
         requireText(blog.titleLine2, `travel item ${index} titleLine2`);
     }
 }
 requireUnique(travel.items, "link", "travel");
+requireScriptOrder("travel/index.html", "../assets/js/media_loader.js", "blog_data.js");
 requireScriptOrder("travel/index.html", "blog_data.js", "travel_blogs.js");
 
 const projects = loadData("resume/project_data.js").projects;
@@ -68,10 +83,38 @@ for (const [collectionIndex, collection] of photography.collections.entries()) {
         for (const field of ["filename", "location", "caption"]) {
             requireText(photo[field], `photo collection ${collectionIndex} item ${photoIndex} ${field}`);
         }
+        requireOriginalImageName(
+            photo.filename,
+            `photo collection ${collectionIndex} item ${photoIndex} filename`,
+        );
     }
 }
 requireUnique(photography.collections, "name", "photo collection");
+requireScriptOrder("photography/index.html", "../assets/js/media_loader.js", "photo_data.js");
 requireScriptOrder("photography/index.html", "photo_data.js", "photography.js");
+
+for (const pagePath of [
+    "coffee/index.html",
+    "coffee/Overview/index.html",
+    "coffee/Overview/kr/index.html",
+    "coffee/reviews/rancilio_silvia/index.html",
+    "photography/index.html",
+    "templates/travel-blog/index.html",
+    "travel/index.html",
+    "travel_blogs/SF_LA/index.html",
+    "travel_blogs/japan_2025/index.html",
+    "travel_blogs/korea_2025/index.html",
+    "travel_blogs/montreal/index.html",
+]) {
+    requireWebpPreference(pagePath);
+}
+
+const travelRenderer = readFileSync(path.join(repositoryRoot, "travel/travel_blogs.js"), "utf8");
+assert.match(travelRenderer, /siteMedia\.setImageSource\(image, originalImageUrl\)/);
+
+const photoRenderer = readFileSync(path.join(repositoryRoot, "photography/photography.js"), "utf8");
+assert.match(photoRenderer, /siteMedia\.setImageSource\(image, originalImageUrl\)/);
+assert.match(photoRenderer, /visibleImage\.dataset\.originalSrc \|\| visibleImage\.src/);
 
 const styles = readFileSync(path.join(repositoryRoot, "assets/css/site.css"), "utf8");
 assert.match(styles, /\.posts\.has-odd-cards::after/, "Odd card grids need a CSS filler cell");

@@ -40,10 +40,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function openModal(image) {
+        const originalSource = image.dataset.originalSrc || image.src;
         triggerElement = image;
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
-        modalImg.src = image.src;
+        modalImg.src = originalSource;
+        modalImg.dataset.originalSrc = originalSource;
         modalImg.alt = image.alt || "";
         captionText.textContent = image.alt || "";
         modalImg.classList.remove("zoom-out");
