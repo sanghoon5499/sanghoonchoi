@@ -16,6 +16,9 @@ maintain without limiting page-specific layouts.
 - `coffee/` contains coffee articles and reviews.
 - `photography/` contains the photography page and carousel behavior.
 - `resume/` contains the resume, project index, and project card data.
+- `templates/` contains starter HTML that remains fully editable after copying.
+- `docs/blog-authoring.md` contains copyable, human-readable layouts for travel
+  blogs and coffee articles.
 - `unreleased/` and `travel_blogs/backburner/` contain draft or archived pages.
 
 ## Local workflow
@@ -36,6 +39,12 @@ python3 -m http.server 8000 --bind 127.0.0.1
 Then open `http://127.0.0.1:8000` in a browser. Stop the server with `Ctrl+C`.
 
 ## Adding a page
+
+For a travel blog, start with `templates/travel-blog.html` and use the copyable
+layouts in `docs/blog-authoring.md`. Every width and alignment option is named by
+its visible result; article HTML does not require grid calculations.
+
+For another page type:
 
 1. Copy the existing page whose layout is closest to the new page.
 2. Update the document title, heading, active navigation item, and relative paths.
@@ -60,7 +69,7 @@ Then open `http://127.0.0.1:8000` in a browser. Stop the server with `Ctrl+C`.
 - modal open, caption, keyboard-close, and optional zoom behavior
 - one document shell per published HTML page
 - balanced common HTML elements and valid break markup
-- duplicate HTML IDs
+- duplicate HTML IDs and class attributes
 - missing local links, media, script, and stylesheet dependencies
 - shared stylesheet, media-loader, and modal-handler contracts
 - unresolved merge-conflict markers
