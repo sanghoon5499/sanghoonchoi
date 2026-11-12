@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "..");
 const excludedDirectories = new Set([".git", "node_modules"]);
-const excludedPagePrefixes = ["travel_blogs/backburner/", "unreleased/"];
+const excludedPagePrefixes = ["templates/", "travel_blogs/backburner/", "unreleased/"];
 const checkedSourceExtensions = new Set([
     ".css",
     ".html",
@@ -82,6 +82,14 @@ function checkMarkupSanity(file, content) {
 
     if (/<span\b[^>]*\btarget\s*=/i.test(markup)) {
         failures.push(`${relativePath(file)}: target attribute must be placed on the link`);
+    }
+
+    if (/<[^>]+\bclass\s*=\s*(["'])[^"']*\1[^>]+\bclass\s*=/i.test(markup)) {
+        failures.push(`${relativePath(file)}: element has duplicate class attributes`);
+    }
+
+    if (/<p\b[^>]*>(?:(?!<\/p>)[\s\S])*?<p\b/i.test(markup)) {
+        failures.push(`${relativePath(file)}: paragraph elements must not be nested`);
     }
 
     for (const element of pairedElements) {
@@ -177,6 +185,16 @@ function checkSharedAssetUsage(file, content) {
 
     if (/const\s+(?:audioResourcePrefix|resourcePrefix)\s*=/.test(content)) {
         failures.push(`${relative}: inline media loader must use the shared media loader`);
+    }
+
+    if (relative.startsWith("templates/")) {
+        if (/\bcol-\d+\b/.test(content)) {
+            failures.push(`${relative}: authoring templates must use human-readable width classes`);
+        }
+
+        if (/\sstyle\s*=/.test(content)) {
+            failures.push(`${relative}: authoring templates must not require inline layout styles`);
+        }
     }
 }
 

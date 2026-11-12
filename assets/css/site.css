@@ -82,3 +82,75 @@ img {
         transform: scale(0);
     }
 }
+
+/* Human-readable blog layout choices. */
+.row.row-center {
+    justify-content: center;
+}
+
+.image-full {
+    width: 100%;
+}
+
+.image-five-sixths {
+    width: 83.33333%;
+}
+
+.image-four-fifths,
+.image.image-four-fifths {
+    width: 80%;
+}
+
+.image-three-quarters {
+    width: 75%;
+}
+
+.image-two-thirds {
+    width: 66.66667%;
+}
+
+.image-half {
+    width: 50%;
+}
+
+.image-two-fifths {
+    width: 40%;
+}
+
+.image-third {
+    width: 33.33333%;
+}
+
+.image-quarter {
+    width: 25%;
+}
+
+.image-center,
+.image.image-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-wrap-left,
+.text-wrap-right {
+    top: 0.75rem;
+}
+
+.text-wrap-left {
+    float: left;
+    margin: 0 2rem 2rem 0;
+}
+
+.text-wrap-right {
+    float: right;
+    margin: 0 0 2rem 2rem;
+}
+
+.text-wrap-left img,
+.text-wrap-right img {
+    width: 100%;
+}
+
+.clear-float {
+    clear: both;
+}
