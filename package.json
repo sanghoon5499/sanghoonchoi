@@ -4,7 +4,7 @@
     "private": true,
     "description": "Development checks for sanghoonchoi.com",
     "scripts": {
-        "check": "node scripts/check-site.mjs && node scripts/test-layout-classes.mjs && node scripts/test-media-loader.mjs && node scripts/test-modal-handlers.mjs"
+        "check": "node scripts/check-site.mjs && node scripts/test-clean-urls.mjs && node scripts/test-layout-classes.mjs && node scripts/test-media-loader.mjs && node scripts/test-modal-handlers.mjs"
     },
     "engines": {
         "node": ">=18"

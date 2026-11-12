@@ -12,7 +12,8 @@ maintain without limiting page-specific layouts.
   `assets/css/main.css` remains template-owned; custom styles belong in
   `assets/css/site.css`.
 - `travel/` contains the travel index and its card data.
-- `travel_blogs/` contains individually authored travel articles.
+- `travel_blogs/` contains one directory per travel article; each directory's
+  `index.html` provides the article's clean trailing-slash URL.
 - `coffee/` contains coffee articles and reviews.
 - `photography/` contains the photography page and carousel behavior.
 - `resume/` contains the resume, project index, and project card data.
@@ -40,7 +41,7 @@ Then open `http://127.0.0.1:8000` in a browser. Stop the server with `Ctrl+C`.
 
 ## Adding a page
 
-For a travel blog, start with `templates/travel-blog.html` and use the copyable
+For a travel blog, start with `templates/travel-blog/index.html` and use the copyable
 layouts in `docs/blog-authoring.md`. Every width and alignment option is named by
 its visible result; article HTML does not require grid calculations.
 
@@ -71,6 +72,7 @@ For another page type:
 - balanced common HTML elements and valid break markup
 - duplicate HTML IDs and class attributes
 - missing local links, media, script, and stylesheet dependencies
+- clean travel URLs, canonical links, and legacy redirect pages
 - shared stylesheet, media-loader, and modal-handler contracts
 - unresolved merge-conflict markers
 

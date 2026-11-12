@@ -6,11 +6,12 @@ arithmetic or CSS experimentation.
 
 ## Start a travel blog
 
-1. Copy `templates/travel-blog.html` to `travel_blogs/<name>.html`.
+1. Copy `templates/travel-blog/index.html` to `travel_blogs/<name>/index.html`.
 2. Replace the title, date, introduction, section headings, and body text.
-3. Set `data-media-base` on the `media_loader.js` script to the image folder URL.
-4. Add the blog card to `travel/travel_blogs.js`.
-5. Run `npm run check` and preview both desktop and mobile layouts.
+3. Replace the canonical URL with the new article's clean directory URL.
+4. Set `data-media-base` on the `media_loader.js` script to the image folder URL.
+5. Add the blog card to `travel/travel_blogs.js` using a trailing-slash URL.
+6. Run `npm run check` and preview both desktop and mobile layouts.
 
 ## Start a coffee article
 
