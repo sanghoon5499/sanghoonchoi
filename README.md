@@ -55,9 +55,11 @@ For another page type:
 4. For an indexed travel post, project, or photo collection, add the item to
    the dedicated data file described in `docs/content-data.md`. Rendering files
    normally do not need to change.
-5. For remote media, add `js-dynamic-image` and `data-filename` to the media
-   element, then load `assets/js/media_loader.js` with the page's
-   `data-media-base` URL. Use `data-audio-base` when audio has a different base.
+5. For remote media, add `js-dynamic-image`, keep the original JPEG/PNG name
+   in `data-filename`, load `assets/js/media_loader.js` with the page's original `data-media-base`
+   URL, and set `data-prefer-webp="true"`. The loader displays the corresponding
+   `webp/<name>.webp` file and falls back to the original automatically. Use
+   `data-audio-base` when audio has a different base.
 6. Pages with an image modal should load the shared
    `assets/js/image_overlay_handler.js`. Add `data-zoomable="true"` to the modal
    only when zoom and pan controls are needed.
@@ -69,8 +71,8 @@ For another page type:
 `npm run check` performs fast checks without changing files:
 
 - JavaScript syntax for project-owned scripts
-- shared media-loader behavior for images, video, and audio
-- modal open, caption, keyboard, focus, and optional zoom behavior
+- shared media-loader behavior for WebP display, original fallback, video, and audio
+- modal use of original image files with keyboard, focus, and optional zoom behavior
 - semantic photography controls and embedded content labels
 - one document shell per published HTML page
 - balanced common HTML elements and valid break markup

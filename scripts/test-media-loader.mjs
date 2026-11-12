@@ -14,9 +14,20 @@ function createClassList(classes) {
 
 function createMediaElement({ classes, filename, tagName }) {
     let loadCount = 0;
+    const listeners = new Map();
     return {
         classList: createClassList(classes),
         dataset: { filename },
+        addEventListener(type, listener) {
+            listeners.set(type, listener);
+        },
+        dispatch(type) {
+            const listener = listeners.get(type);
+            if (listener) {
+                listeners.delete(type);
+                listener();
+            }
+        },
         get loadCount() {
             return loadCount;
         },
@@ -56,6 +67,7 @@ const document = {
         dataset: {
             audioBase: "https://media.example.test/audio/",
             mediaBase: "https://media.example.test/images/",
+            preferWebp: "true",
         },
     },
     addEventListener(type, listener) {
@@ -68,13 +80,21 @@ const document = {
     },
 };
 
+const window = {};
 const source = readFileSync(path.join(repositoryRoot, loaderPath), "utf8");
-vm.runInNewContext(source, { document }, { filename: loaderPath });
+vm.runInNewContext(source, { document, window }, { filename: loaderPath });
 domContentLoaded();
 
-assert.equal(image.src, "https://media.example.test/images/photo.jpg");
+assert.equal(image.src, "https://media.example.test/images/webp/photo.webp");
+assert.equal(image.dataset.originalSrc, "https://media.example.test/images/photo.jpg");
 assert.equal(image.loading, "lazy", "Images should load only as they approach the viewport");
 assert.equal(image.decoding, "async", "Image decoding should not block rendering");
+assert.equal(
+    window.siteMedia.getWebpUrl("https://media.example.test/path/photo.JPG?size=large"),
+    "https://media.example.test/path/webp/photo.webp?size=large",
+);
+image.dispatch("error");
+assert.equal(image.src, "https://media.example.test/images/photo.jpg", "Images should fall back to the original");
 assert.equal(video.src, "https://media.example.test/images/clip.mp4");
 assert.equal(video.preload, "metadata", "Videos should avoid eager full downloads");
 assert.equal(video.loadCount, 1, "Videos should reload after their source changes");

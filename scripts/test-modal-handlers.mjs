@@ -56,6 +56,7 @@ function createModalEnvironment({ zoomEnabled = false } = {}) {
         classList: createClassList(),
         clientHeight: 600,
         clientWidth: 800,
+        dataset: {},
         src: "",
         style: {},
     });
@@ -73,10 +74,11 @@ function createModalEnvironment({ zoomEnabled = false } = {}) {
     const image = createEventTarget({
         alt: "Test caption",
         classList: createClassList(["image_overlay"]),
+        dataset: { originalSrc: "https://example.test/image.jpg" },
         closest(selector) {
             return selector === "img.image_overlay" ? this : null;
         },
-        src: "https://example.test/image.jpg",
+        src: "https://example.test/webp/image.webp",
     });
     const document = createEventTarget({
         body,
@@ -109,7 +111,12 @@ function testGenericModal() {
     assert.equal(environment.modal.style.display, "flex", "Modal should open");
     assert.equal(environment.modal.attributes.get("aria-hidden"), "false");
     assert.equal(environment.modal.focused, true, "Modal should receive focus when opened");
-    assert.equal(environment.modalImage.src, environment.image.src, "Modal should show the selected image");
+    assert.equal(
+        environment.modalImage.src,
+        environment.image.dataset.originalSrc,
+        "Modal should show the original image",
+    );
+    assert.equal(environment.modalImage.dataset.originalSrc, environment.image.dataset.originalSrc);
     assert.equal(environment.modalImage.alt, environment.image.alt, "Modal image should retain the alternative text");
     assert.equal(environment.caption.textContent, environment.image.alt, "Modal should show the image caption");
 

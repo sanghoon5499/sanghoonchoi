@@ -38,9 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
             item.className = "carousel-item";
 
             const image = document.createElement("img");
-            image.loading = "lazy";
-            image.decoding = "async";
-            image.src = data.imageBase + photo.filename;
+            const originalImageUrl = data.imageBase + photo.filename;
+            window.siteMedia.setImageSource(image, originalImageUrl);
             image.alt = photo.caption;
             image.dataset.location = photo.location;
             image.dataset.caption = photo.caption;
@@ -70,9 +69,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            const originalUrl = visibleImage.dataset.originalSrc || visibleImage.src;
             const link = document.createElement("a");
-            link.href = visibleImage.src;
-            link.download = visibleImage.src.split("/").pop();
+            link.href = originalUrl;
+            link.download = originalUrl.split("/").pop();
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

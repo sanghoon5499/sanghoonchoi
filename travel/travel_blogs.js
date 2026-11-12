@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const image = clone.querySelector(".blog-image");
         const title = clone.querySelector(".blog-title");
 
-        image.src = data.imageBase + blog.image;
+        const originalImageUrl = data.imageBase + blog.image;
+        window.siteMedia.setImageSource(image, originalImageUrl);
         image.alt = blog.titleLine2 ? `${blog.title} ${blog.titleLine2}` : blog.title;
 
         title.textContent = blog.title;

@@ -9,9 +9,14 @@ arithmetic or CSS experimentation.
 1. Copy `templates/travel-blog/index.html` to `travel_blogs/<name>/index.html`.
 2. Replace the title, date, introduction, section headings, and body text.
 3. Replace the canonical URL with the new article's clean directory URL.
-4. Set `data-media-base` on the `media_loader.js` script to the image folder URL.
-5. Add the blog card to `travel/travel_blogs.js` using a trailing-slash URL.
+4. Set `data-media-base` on the `media_loader.js` script to the original image
+   folder URL. Keep `data-prefer-webp="true"` enabled.
+5. Add the blog card to `travel/blog_data.js` using a trailing-slash URL.
 6. Run `npm run check` and preview both desktop and mobile layouts.
+
+Use the original JPEG/PNG filename in `data-filename`. The shared loader derives
+the matching `webp/<name>.webp` URL for display and retains the original URL as
+the fallback and full-resolution modal source.
 
 ## Start a coffee article
 
