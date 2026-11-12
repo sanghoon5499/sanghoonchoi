@@ -50,9 +50,11 @@ Then open `http://127.0.0.1:8000` in a browser. Stop the server with `Ctrl+C`.
 `npm run check` performs fast checks without changing files:
 
 - JavaScript syntax for project-owned scripts
+- modal open, caption, and keyboard-close regression tests
 - one document shell per published HTML page
+- balanced common HTML elements and valid break markup
 - duplicate HTML IDs
-- missing local script and stylesheet dependencies
+- missing local links, media, script, and stylesheet dependencies
 - unresolved merge-conflict markers
 
 Draft and archived HTML under `unreleased/` and `travel_blogs/backburner/` is not

@@ -2,31 +2,43 @@ document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById("myModal");
     const modalImg = document.getElementById("image_box");
     const captionText = document.getElementById("caption");
-    const closeBtn = document.getElementsByClassName("close")[0];
 
-    // Select all images with class 'image_overlay'
-    const images = document.querySelectorAll("img");
+    if (!modal || !modalImg || !captionText) {
+        return;
+    }
 
-    images.forEach(img => {
+    const closeBtn = modal.querySelector(".close");
+    const images = document.querySelectorAll("img.image_overlay");
+
+    images.forEach((img) => {
         img.addEventListener("click", function () {
             modal.style.display = "flex";
             modalImg.src = this.src;
-            captionText.innerHTML = this.alt ? this.alt : "";
-            modalImg.classList.remove("zoom-out"); // Reset zoom-out animation
+            captionText.textContent = this.alt || "";
+            modalImg.classList.remove("zoom-out");
         });
     });
 
     function closeModal() {
-        modalImg.classList.add("zoom-out"); // Apply zoom-out animation
+        modalImg.classList.add("zoom-out");
         setTimeout(() => {
             modal.style.display = "none";
             modalImg.classList.remove("zoom-out");
-        }, 300); // Match animation duration
+        }, 300);
     }
 
-    closeBtn.addEventListener("click", closeModal);
+    if (closeBtn) {
+        closeBtn.addEventListener("click", closeModal);
+    }
+
     modal.addEventListener("click", function (event) {
         if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && modal.style.display === "flex") {
             closeModal();
         }
     });

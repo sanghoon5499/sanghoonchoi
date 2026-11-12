@@ -72,6 +72,29 @@ function checkDuplicateIds(file, content) {
     }
 }
 
+function checkMarkupSanity(file, content) {
+    const markup = content.replace(/<!--[\s\S]*?-->/g, "");
+    const pairedElements = ["a", "h1", "h2", "h3", "header", "nav", "p", "section", "style"];
+
+    if (/<\/br\s*>/i.test(markup)) {
+        failures.push(`${relativePath(file)}: invalid closing br tag`);
+    }
+
+    if (/<span\b[^>]*\btarget\s*=/i.test(markup)) {
+        failures.push(`${relativePath(file)}: target attribute must be placed on the link`);
+    }
+
+    for (const element of pairedElements) {
+        const openingCount = countMatches(markup, new RegExp(`<${element}\\b`, "gi"));
+        const closingCount = countMatches(markup, new RegExp(`</${element}\\s*>`, "gi"));
+        if (openingCount !== closingCount) {
+            failures.push(
+                `${relativePath(file)}: unbalanced ${element} tags (${openingCount} opening, ${closingCount} closing)`,
+            );
+        }
+    }
+}
+
 function isLocalReference(reference) {
     return Boolean(reference)
         && !reference.startsWith("#")
@@ -103,6 +126,10 @@ function checkLocalDependencies(file, content) {
     const dependencyPatterns = [
         /<script\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/gi,
         /<link\b[^>]*\bhref\s*=\s*(["'])(.*?)\1/gi,
+        /<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1/gi,
+        /<img\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/gi,
+        /<iframe\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/gi,
+        /<source\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/gi,
     ];
 
     for (const pattern of dependencyPatterns) {
@@ -164,6 +191,7 @@ for (const file of publishedHtmlFiles) {
     const content = readFileSync(file, "utf8");
     checkDocumentStructure(file, content);
     checkDuplicateIds(file, content);
+    checkMarkupSanity(file, content);
     checkLocalDependencies(file, content);
 }
 
