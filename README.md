@@ -11,15 +11,17 @@ maintain without limiting page-specific layouts.
 - `assets/` contains HTML5 UP files plus shared site styles and behavior.
   `assets/css/main.css` remains template-owned; custom styles belong in
   `assets/css/site.css`.
-- `travel/` contains the travel index and its card data.
+- `travel/` contains the travel index, editable `blog_data.js`, and its renderer.
 - `travel_blogs/` contains one directory per travel article; each directory's
   `index.html` provides the article's clean trailing-slash URL.
 - `coffee/` contains coffee articles and reviews.
-- `photography/` contains the photography page and carousel behavior.
-- `resume/` contains the resume, project index, and project card data.
+- `photography/` contains editable `photo_data.js` and carousel behavior.
+- `resume/` contains the resume, editable `project_data.js`, and its renderer.
 - `templates/` contains starter HTML that remains fully editable after copying.
 - `docs/blog-authoring.md` contains copyable, human-readable layouts for travel
   blogs and coffee articles.
+- `docs/content-data.md` explains how to add travel cards, projects, and photo
+  collections without changing rendering code.
 - `unreleased/` and `travel_blogs/backburner/` contain draft or archived pages.
 
 ## Local workflow
@@ -50,8 +52,9 @@ For another page type:
 1. Copy the existing page whose layout is closest to the new page.
 2. Update the document title, heading, active navigation item, and relative paths.
 3. Write the page content directly in HTML and customize its layout as needed.
-4. For an indexed travel post or project, add its card data to the corresponding
-   JavaScript file in `travel/` or `resume/`.
+4. For an indexed travel post, project, or photo collection, add the item to
+   the dedicated data file described in `docs/content-data.md`. Rendering files
+   normally do not need to change.
 5. For remote media, add `js-dynamic-image` and `data-filename` to the media
    element, then load `assets/js/media_loader.js` with the page's
    `data-media-base` URL. Use `data-audio-base` when audio has a different base.
@@ -73,6 +76,7 @@ For another page type:
 - duplicate HTML IDs and class attributes
 - missing local links, media, script, and stylesheet dependencies
 - clean travel URLs, canonical links, and legacy redirect pages
+- required and unique travel, project, and photography data
 - shared stylesheet, media-loader, and modal-handler contracts
 - unresolved merge-conflict markers
 

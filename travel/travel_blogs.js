@@ -1,97 +1,38 @@
-// ==========================================
-// 1. CONFIGURATION
-// ==========================================
-// Base URL for your travel blog images
-const BLOG_IMG_BASE = "https://storage.googleapis.com/sc-travel-blog/"; 
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("blogs-container");
+    const template = document.getElementById("blog-template");
+    const data = window.siteContent && window.siteContent.travelBlogs;
 
-// ==========================================
-// 2. The Model (Data)
-// ==========================================
-const blogs = [
-    {
-        title: "Korea",
-        date: "May 6 - June 9, 2025",
-        image: "Korea_Thumb_horizontal.png",
-        link: "../travel_blogs/korea_2025/",
-        description: "A return to my roots in Korea, this trip was a chance to reconnect with family and friends, and explore new sides of a place I once knew. I discovered hidden gems and new perspectives on my past.",
-        buttonText: "Full Story"
-    },
-    {
-        title: "Japan",
-        date: "Apr 26 - May 5, 2025",
-        image: "Japan_Thumb_horizontal.png",
-        link: "../travel_blogs/japan_2025/",
-        description: "A return to Japan felt both familiar and brand new. Join me on a two-week adventure of contrasts: from the streets of Tokyo to the peaks of Hakone, filled with amazing food and a newfound love for nama biru.",
-        buttonText: "Full Story"
-    },
-    {
-        title: "Montréal",
-        date: "Sept 27 - Oct 12, 2024",
-        image: "montreal.JPG",
-        link: "../travel_blogs/montreal/",
-        description: "Boasting a strong French heritage, I was able to get a taste of French culture, cuisine, and architecture. Chock-full of interesting visuals in every corner of the city, it's worth taking the time to take in the views.",
-        buttonText: "Full Story"
-    },
-    {
-        title: "San Francisco<br />Los Angeles",
-        date: "July 2 - July 18, 2024",
-        image: "sfla.JPG",
-        link: "../travel_blogs/SF_LA/",
-        description: "I finally know why every SF startup CEO and their mothers pair a Patagonia vest and a shirt; it's chillier than you think. But besides the climate, I had a blast enjoying some good food and good company.",
-        buttonText: "Full Story"
-    },
-    // Add a blank object here if you have an odd number of posts
-    // { title: "", date: "", image: "", link: "", description: "", buttonText: "" }
-];
+    if (!container || !template || !data) {
+        return;
+    }
 
-// ==========================================
-// 3. The Adapter (ViewModel)
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('blogs-container');
-    const template = document.getElementById('blog-template');
+    container.classList.toggle("has-odd-cards", data.items.length % 2 === 1);
 
-    if (!container || !template) return;
-
-    blogs.forEach(blog => {
+    data.items.forEach((blog) => {
         const clone = template.content.cloneNode(true);
-        
-        // --- IMAGE HANDLING ---
-        const imgEl = clone.querySelector('.blog-image');
-        if (blog.image) {
-            imgEl.src = BLOG_IMG_BASE + blog.image;
-            imgEl.alt = blog.title.replace("<br />", " "); // Clean alt text
-        } else {
-            const imgLink = clone.querySelector('a.image');
-            if(imgLink) imgLink.remove();
+        const image = clone.querySelector(".blog-image");
+        const title = clone.querySelector(".blog-title");
+
+        image.src = data.imageBase + blog.image;
+        image.alt = blog.titleLine2 ? `${blog.title} ${blog.titleLine2}` : blog.title;
+
+        title.textContent = blog.title;
+        if (blog.titleLine2) {
+            title.appendChild(document.createElement("br"));
+            title.appendChild(document.createTextNode(blog.titleLine2));
         }
 
-        // --- TEXT HANDLING ---
-        clone.querySelector('.date').textContent = blog.date || "";
-        
-        // Use innerHTML for title to allow <br /> tags
-        clone.querySelector('.blog-title').innerHTML = blog.title || "";
-        
-        clone.querySelector('.blog-desc').textContent = blog.description || "";
+        clone.querySelector(".date").textContent = blog.date;
+        clone.querySelector(".blog-desc").textContent = blog.description;
 
-        // --- BUTTON HANDLING ---
-        const btnEl = clone.querySelector('.blog-button');
-        if (blog.buttonText) {
-            btnEl.textContent = blog.buttonText;
-            btnEl.href = blog.link;
-        } else {
-            const actionsUl = clone.querySelector('.actions');
-            if(actionsUl) actionsUl.remove();
-        }
+        clone.querySelectorAll(".blog-link").forEach((link) => {
+            link.href = blog.link;
+        });
 
-        // --- LINK HANDLING ---
-        if (blog.link) {
-            const linkEls = clone.querySelectorAll('.blog-link');
-            linkEls.forEach(link => link.href = blog.link);
-        } else {
-            const titleLink = clone.querySelector('.blog-title');
-            if (titleLink) titleLink.removeAttribute('href');
-        }
+        const button = clone.querySelector(".blog-button");
+        button.href = blog.link;
+        button.textContent = blog.buttonText;
 
         container.appendChild(clone);
     });
