@@ -60,9 +60,9 @@ For another page type:
    URL, and set `data-prefer-webp="true"`. The loader displays the corresponding
    `webp/<name>.webp` file and falls back to the original automatically. Use
    `data-audio-base` when audio has a different base.
-6. Pages with an image modal should load the shared
-   `assets/js/image_overlay_handler.js`. Add `data-zoomable="true"` to the modal
-   only when zoom and pan controls are needed.
+6. Pages with image popovers should load `assets/js/image_overlay_handler.js`.
+   The script creates the popover automatically; authored pages need no popover
+   markup or zoom configuration.
 7. Run `npm run check`, preview the affected desktop and mobile layouts, and
    inspect the browser console before committing.
 
@@ -72,7 +72,7 @@ For another page type:
 
 - JavaScript syntax for project-owned scripts
 - shared media-loader behavior for WebP display, original fallback, video, and audio
-- modal use of original image files with keyboard, focus, and optional zoom behavior
+- popover close, caption, original-file link, pinch zoom, drag, focus, and keyboard behavior
 - semantic photography controls and embedded content labels
 - one document shell per published HTML page
 - balanced common HTML elements and valid break markup
@@ -81,7 +81,7 @@ For another page type:
 - clean travel URLs, canonical links, and legacy redirect pages
 - required and unique travel, project, and photography data
 - removal of obsolete template demo pages and controls
-- shared stylesheet, media-loader, and modal-handler contracts
+- shared stylesheet, media-loader, and image-popover contracts
 - unresolved merge-conflict markers
 
 Draft HTML under `unreleased/` is not part of the default published-page check. The checks will expand as existing
