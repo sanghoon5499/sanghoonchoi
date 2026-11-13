@@ -16,8 +16,12 @@ assert.match(photography, /<button[^>]+class="nav-zone next"[^>]+aria-label="Nex
 assert.doesNotMatch(photography, /<a[^>]+class="username"/);
 assert.match(photography, /class="insta-actions" aria-hidden="true"/);
 
-const resume = read("resume/index.html");
-assert.match(resume, /<iframe[^>]+title="Sanghoon Choi resume"/s);
+const resumeLanding = read("resume/index.html");
+assert.match(resumeLanding, /<button[^>]+id="open-resume-popover"[^>]*>View Resume<\/button>/);
+assert.match(resumeLanding, /href="resume\.pdf"[^>]*download>Download PDF<\/a>/);
+assert.match(resumeLanding, /<dialog[^>]+id="resume-popover"[^>]+aria-label="Resume"/);
+assert.match(resumeLanding, /<iframe[^>]+title="Sanghoon Choi resume"/s);
+assert.match(resumeLanding, /<script src="resume\.js"><\/script>/);
 
 const homepage = read("index.html");
 assert.match(homepage, /Design based on <a href="https:\/\/html5up\.net\/massively">Massively<\/a> by HTML5 UP\./);

@@ -11,10 +11,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
     data.items.forEach((project) => {
         const clone = template.content.cloneNode(true);
+        const imageLink = clone.querySelector("a.image");
         const image = clone.querySelector(".project-image");
 
-        image.src = data.imageBase + project.image;
-        image.alt = project.title;
+        if (project.image) {
+            const originalImageUrl = data.imageBase + project.image;
+
+            image.loading = "lazy";
+            image.decoding = "async";
+            image.alt = project.title;
+
+            function hideUnavailableImage() {
+                imageLink.remove();
+            }
+
+            if (project.webpImage) {
+                image.addEventListener("error", function useOriginalImage() {
+                    image.addEventListener("error", hideUnavailableImage, { once: true });
+                    image.src = originalImageUrl;
+                }, { once: true });
+                image.src = data.imageBase + project.webpImage;
+            } else {
+                image.addEventListener("error", hideUnavailableImage, { once: true });
+                image.src = originalImageUrl;
+            }
+        } else {
+            imageLink.remove();
+        }
 
         clone.querySelector(".date").textContent = project.date;
         clone.querySelector(".project-title").textContent = project.title;

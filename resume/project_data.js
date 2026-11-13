@@ -4,6 +4,16 @@ window.siteContent.projects = {
     imageBase: "https://storage.googleapis.com/sc-other/projects/",
     items: [
         {
+            title: "Spotify Info",
+            date: "Aug 29, 2026",
+            image: "spotify.png",
+            webpImage: "webp/spotify.webp",
+            link: "https://github.com/sanghoon5499/spotify_info",
+            description: "Spotify Info is a dashboard for exploring a Spotify user's top tracks and artists, kinda like Spotify Wrapped.",
+            techStack: "Built with the Spotify Web API. User-provided access tokens remain in browser memory while the page is open.",
+            buttonText: "Github",
+        },
+        {
             title: "Cafe Logger",
             date: "Aug 19, 2025",
             image: "cafe_logger_usage.JPG",

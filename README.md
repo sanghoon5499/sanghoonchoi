@@ -16,7 +16,8 @@ maintain without limiting page-specific layouts.
   `index.html` provides the article's clean trailing-slash URL.
 - `coffee/` contains coffee articles and reviews.
 - `photography/` contains editable `photo_data.js` and carousel behavior.
-- `resume/` contains the resume, editable `project_data.js`, and its renderer.
+- `resume/` contains the resume summary and PDF popover, editable
+  `project_data.js`, and project-card renderer.
 - `templates/` contains starter HTML that remains fully editable after copying.
 - `docs/blog-authoring.md` contains copyable, human-readable layouts for travel
   blogs and coffee articles.
