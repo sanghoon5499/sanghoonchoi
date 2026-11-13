@@ -1,80 +1,109 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const modal = document.getElementById("myModal");
-    const modalImg = document.getElementById("image_box");
-    const captionText = document.getElementById("caption");
+    const dialog = document.createElement("dialog");
+    dialog.className = "image-popover";
+    dialog.setAttribute("aria-label", "Image preview");
 
-    if (!modal || !modalImg || !captionText) {
-        return;
-    }
+    const content = document.createElement("div");
+    content.className = "image-popover__content";
 
-    const closeBtn = modal.querySelector(".close");
-    const zoomEnabled = modal.dataset.zoomable === "true";
-    const configuredCloseDuration = Number.parseInt(modal.dataset.closeDuration || "300", 10);
-    const closeDuration = Number.isFinite(configuredCloseDuration) ? configuredCloseDuration : 300;
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "image-popover__close";
+    closeButton.setAttribute("aria-label", "Close image preview");
+    closeButton.textContent = "×";
 
-    modal.setAttribute("role", "dialog");
-    modal.setAttribute("aria-modal", "true");
-    modal.setAttribute("aria-hidden", "true");
-    modal.setAttribute("aria-label", "Image preview");
-    modal.setAttribute("aria-describedby", "caption");
-    modal.tabIndex = -1;
+    const stage = document.createElement("div");
+    stage.className = "image-popover__stage";
 
-    let triggerElement = null;
+    const preview = document.createElement("img");
+    preview.className = "image-popover__image";
+    preview.alt = "";
+    preview.draggable = false;
+
+    const footer = document.createElement("div");
+    footer.className = "image-popover__footer";
+
+    const caption = document.createElement("p");
+    caption.className = "image-popover__caption";
+
+    const originalLink = document.createElement("a");
+    originalLink.className = "image-popover__original";
+    originalLink.target = "_blank";
+    originalLink.rel = "noopener noreferrer";
+    originalLink.textContent = "Open original";
+
+    stage.appendChild(preview);
+    footer.appendChild(caption);
+    footer.appendChild(originalLink);
+    content.appendChild(closeButton);
+    content.appendChild(stage);
+    content.appendChild(footer);
+    dialog.appendChild(content);
+    document.body.appendChild(dialog);
+
+    let triggerImage = null;
+    let previousBodyOverflow = "";
     let scale = 1;
     let translateX = 0;
     let translateY = 0;
     let isDragging = false;
     let isPinching = false;
-    let startX = 0;
-    let startY = 0;
-    let initialPinchDistance = 0;
-    let initialScale = 1;
-    let previousBodyOverflow = "";
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let pinchStartDistance = 0;
+    let pinchStartScale = 1;
 
-    function resetZoom() {
+    function clamp(value, minimum, maximum) {
+        return Math.min(Math.max(value, minimum), maximum);
+    }
+
+    function constrainPan() {
+        const maximumX = Math.max(0, (preview.clientWidth * scale - stage.clientWidth) / 2);
+        const maximumY = Math.max(0, (preview.clientHeight * scale - stage.clientHeight) / 2);
+        translateX = clamp(translateX, -maximumX, maximumX);
+        translateY = clamp(translateY, -maximumY, maximumY);
+    }
+
+    function updateTransform() {
+        constrainPan();
+        preview.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
+        preview.classList.toggle("is-zoomed", scale > 1);
+    }
+
+    function resetTransform() {
         scale = 1;
         translateX = 0;
         translateY = 0;
-        modalImg.style.transform = "translate(0px, 0px) scale(1)";
-        modalImg.style.cursor = zoomEnabled ? "grab" : "default";
+        updateTransform();
     }
 
-    function openModal(image) {
-        const originalSource = image.dataset.originalSrc || image.src;
-        triggerElement = image;
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden", "false");
-        modalImg.src = originalSource;
-        modalImg.dataset.originalSrc = originalSource;
-        modalImg.alt = image.alt || "";
-        captionText.textContent = image.alt || "";
-        modalImg.classList.remove("zoom-out");
+    function getTouchDistance(touches) {
+        const deltaX = touches[0].clientX - touches[1].clientX;
+        const deltaY = touches[0].clientY - touches[1].clientY;
+        return Math.hypot(deltaX, deltaY);
+    }
 
-        if (zoomEnabled) {
-            previousBodyOverflow = document.body.style.overflow;
-            document.body.style.overflow = "hidden";
-            resetZoom();
+    function openPopover(image) {
+        const previewSource = image.currentSrc || image.src;
+        const originalSource = image.dataset.originalSrc || previewSource;
+
+        triggerImage = image;
+        preview.src = previewSource;
+        preview.alt = image.alt || "";
+        caption.textContent = image.alt || "";
+        caption.hidden = !image.alt;
+        originalLink.href = originalSource;
+        previousBodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        dialog.showModal();
+        resetTransform();
+        closeButton.focus({ preventScroll: true });
+    }
+
+    function closePopover() {
+        if (dialog.open) {
+            dialog.close();
         }
-
-        modal.focus({ preventScroll: true });
-    }
-
-    function closeModal() {
-        modalImg.classList.add("zoom-out");
-        setTimeout(() => {
-            modal.style.display = "none";
-            modal.setAttribute("aria-hidden", "true");
-            modalImg.classList.remove("zoom-out");
-
-            if (zoomEnabled) {
-                document.body.style.overflow = previousBodyOverflow;
-                resetZoom();
-            }
-
-            if (triggerElement) {
-                triggerElement.focus({ preventScroll: true });
-            }
-        }, closeDuration);
     }
 
     document.body.addEventListener("click", function (event) {
@@ -84,121 +113,85 @@ document.addEventListener("DOMContentLoaded", function () {
             : null;
 
         if (image) {
-            openModal(image);
+            openPopover(image);
         }
     });
 
-    if (closeBtn) {
-        closeBtn.addEventListener("click", closeModal);
-    }
+    closeButton.addEventListener("click", closePopover);
 
-    modal.addEventListener("click", function (event) {
-        if (event.target === modal) {
-            closeModal();
+    dialog.addEventListener("click", function (event) {
+        if (event.target === dialog) {
+            closePopover();
         }
     });
 
-    document.addEventListener("keydown", function (event) {
-        if (modal.style.display !== "flex") {
-            return;
-        }
+    dialog.addEventListener("close", function () {
+        document.body.style.overflow = previousBodyOverflow;
+        resetTransform();
+        preview.removeAttribute("src");
 
-        if (event.key === "Escape") {
-            closeModal();
-        } else if (event.key === "Tab") {
-            event.preventDefault();
-            modal.focus({ preventScroll: true });
+        if (triggerImage) {
+            triggerImage.focus({ preventScroll: true });
         }
     });
 
-    if (!zoomEnabled) {
-        return;
-    }
-
-    function constrainPan() {
-        const viewportWidth = modal.clientWidth;
-        const viewportHeight = modal.clientHeight;
-        const maxPanX = Math.max(0, (viewportWidth * scale - viewportWidth) / 2);
-        const maxPanY = Math.max(0, (viewportHeight * scale - viewportHeight) / 2);
-
-        translateX = Math.min(Math.max(translateX, -maxPanX), maxPanX);
-        translateY = Math.min(Math.max(translateY, -maxPanY), maxPanY);
-    }
-
-    function updateTransform() {
-        constrainPan();
-        modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-    }
-
-    function getPinchDistance(touches) {
-        const deltaX = touches[0].clientX - touches[1].clientX;
-        const deltaY = touches[0].clientY - touches[1].clientY;
-        return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    }
-
-    modalImg.addEventListener("touchstart", function (event) {
-        event.preventDefault();
-
+    preview.addEventListener("touchstart", function (event) {
         if (event.touches.length === 2) {
+            event.preventDefault();
             isPinching = true;
             isDragging = false;
-            initialPinchDistance = getPinchDistance(event.touches);
-            initialScale = scale;
+            pinchStartDistance = getTouchDistance(event.touches);
+            pinchStartScale = scale;
         } else if (event.touches.length === 1 && scale > 1) {
+            event.preventDefault();
             isDragging = true;
             isPinching = false;
-            startX = event.touches[0].clientX - translateX;
-            startY = event.touches[0].clientY - translateY;
-            modalImg.style.cursor = "grabbing";
+            dragStartX = event.touches[0].clientX - translateX;
+            dragStartY = event.touches[0].clientY - translateY;
         }
     }, { passive: false });
 
-    modalImg.addEventListener("touchmove", function (event) {
-        event.preventDefault();
-
+    preview.addEventListener("touchmove", function (event) {
         if (isPinching && event.touches.length === 2) {
-            const currentDistance = getPinchDistance(event.touches);
-            scale = Math.min(Math.max(1, initialScale * currentDistance / initialPinchDistance), 5);
+            event.preventDefault();
+            const distance = getTouchDistance(event.touches);
+            scale = clamp(pinchStartScale * distance / pinchStartDistance, 1, 5);
             updateTransform();
         } else if (isDragging && event.touches.length === 1) {
-            translateX = event.touches[0].clientX - startX;
-            translateY = event.touches[0].clientY - startY;
+            event.preventDefault();
+            translateX = event.touches[0].clientX - dragStartX;
+            translateY = event.touches[0].clientY - dragStartY;
             updateTransform();
         }
     }, { passive: false });
 
-    modalImg.addEventListener("touchend", function () {
+    preview.addEventListener("touchend", function () {
         isDragging = false;
         isPinching = false;
-        modalImg.style.cursor = "grab";
     });
 
-    modalImg.addEventListener("wheel", function (event) {
+    preview.addEventListener("wheel", function (event) {
         event.preventDefault();
-        const delta = event.deltaY * -0.005;
-        scale = Math.min(Math.max(1, scale + delta), 5);
+        scale = clamp(scale - event.deltaY * 0.005, 1, 5);
+        updateTransform();
+    }, { passive: false });
+
+    preview.addEventListener("dblclick", function () {
+        scale = scale > 1 ? 1 : 2.5;
+        translateX = 0;
+        translateY = 0;
         updateTransform();
     });
 
-    modalImg.addEventListener("dblclick", function () {
-        if (scale > 1) {
-            resetZoom();
-        } else {
-            scale = 2.5;
-            updateTransform();
-        }
-    });
-
-    modalImg.addEventListener("mousedown", function (event) {
+    preview.addEventListener("mousedown", function (event) {
         if (scale === 1) {
             return;
         }
 
         event.preventDefault();
         isDragging = true;
-        startX = event.clientX - translateX;
-        startY = event.clientY - translateY;
-        modalImg.style.cursor = "grabbing";
+        dragStartX = event.clientX - translateX;
+        dragStartY = event.clientY - translateY;
     });
 
     window.addEventListener("mousemove", function (event) {
@@ -206,14 +199,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        event.preventDefault();
-        translateX = event.clientX - startX;
-        translateY = event.clientY - startY;
+        translateX = event.clientX - dragStartX;
+        translateY = event.clientY - dragStartY;
         updateTransform();
     });
 
     window.addEventListener("mouseup", function () {
         isDragging = false;
-        modalImg.style.cursor = "grab";
     });
 });

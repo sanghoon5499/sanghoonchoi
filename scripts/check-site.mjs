@@ -172,8 +172,8 @@ function checkSharedAssetUsage(file, content) {
     const hasSiteStyles = /assets\/css\/site\.css/.test(content);
     const hasDynamicMedia = /js-dynamic-(?:audio|image)/.test(content);
     const hasSharedMediaLoader = /assets\/js\/media_loader\.js/.test(content);
-    const hasModal = /id\s*=\s*(["'])myModal\1/.test(content);
-    const hasSharedModalHandler = /assets\/js\/image_overlay_handler\.js/.test(content);
+    const hasLegacyModal = /id\s*=\s*(["'])myModal\1/.test(content);
+    const hasSharedPopover = /assets\/js\/image_overlay_handler\.js/.test(content);
 
     if (hasTemplateStyles && !hasSiteStyles) {
         failures.push(`${relative}: template styles must be followed by the shared site stylesheet`);
@@ -183,8 +183,12 @@ function checkSharedAssetUsage(file, content) {
         failures.push(`${relative}: dynamic media requires the shared media loader`);
     }
 
-    if (hasModal && !hasSharedModalHandler) {
-        failures.push(`${relative}: image modal requires the shared modal handler`);
+    if (hasLegacyModal) {
+        failures.push(`${relative}: popover markup must be created by the shared script`);
+    }
+
+    if (hasSharedPopover && !hasSiteStyles) {
+        failures.push(`${relative}: image popover requires the shared site stylesheet`);
     }
 
     if (/const\s+(?:audioResourcePrefix|resourcePrefix)\s*=/.test(content)) {

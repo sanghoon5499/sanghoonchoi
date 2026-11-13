@@ -16,12 +16,13 @@ arithmetic or CSS experimentation.
 
 Use the original JPEG/PNG filename in `data-filename`. The shared loader derives
 the matching `webp/<name>.webp` URL for display and retains the original URL as
-the fallback and full-resolution modal source.
+the fallback and full-resolution source. The popover previews the WebP and offers
+**Open original** as a secondary action.
 
 ## Start a coffee article
 
 Copy the existing coffee overview or review whose directory depth and page
-structure match the new article. Keep its shared stylesheet, modal handler, and
+structure match the new article. Keep its shared stylesheet, popover script, and
 media loader paths, then replace the article content and media base. The image
 layouts below work the same way in coffee and travel pages.
 

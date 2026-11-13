@@ -7,26 +7,40 @@ import { fileURLToPath } from "node:url";
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const handlerPath = "assets/js/image_overlay_handler.js";
 
-function createClassList(initialClasses = []) {
-    const classes = new Set(initialClasses);
+function createClassList() {
+    const classes = new Set();
     return {
         add: (name) => classes.add(name),
         contains: (name) => classes.has(name),
-        remove: (name) => classes.delete(name),
+        toggle(name, force) {
+            if (force) {
+                classes.add(name);
+            } else {
+                classes.delete(name);
+            }
+        },
     };
 }
 
 function createEventTarget(properties = {}) {
     const attributes = new Map();
     const listeners = new Map();
-    return {
-        ...properties,
+    const element = {
         attributes,
+        children: [],
+        classList: createClassList(),
+        dataset: {},
         focused: false,
+        style: {},
+        ...properties,
         addEventListener(type, listener) {
-            const eventListeners = listeners.get(type) || [];
-            eventListeners.push(listener);
-            listeners.set(type, eventListeners);
+            const handlers = listeners.get(type) || [];
+            handlers.push(listener);
+            listeners.set(type, handlers);
+        },
+        appendChild(child) {
+            this.children.push(child);
+            return child;
         },
         dispatch(type, event = {}) {
             for (const listener of listeners.get(type) || []) {
@@ -40,115 +54,129 @@ function createEventTarget(properties = {}) {
         focus() {
             this.focused = true;
         },
+        removeAttribute(name) {
+            if (name === "src") {
+                this.src = "";
+            }
+            attributes.delete(name);
+        },
         setAttribute(name, value) {
             attributes.set(name, value);
         },
     };
+    return element;
 }
 
-function runHandler(globals) {
-    const source = readFileSync(path.join(repositoryRoot, handlerPath), "utf8");
-    vm.runInNewContext(source, globals, { filename: handlerPath });
-}
-
-function createModalEnvironment({ zoomEnabled = false } = {}) {
-    const modalImage = createEventTarget({
-        classList: createClassList(),
-        clientHeight: 600,
-        clientWidth: 800,
-        dataset: {},
-        src: "",
-        style: {},
-    });
-    const caption = { textContent: "" };
-    const modal = createEventTarget({
-        clientHeight: 600,
-        clientWidth: 800,
-        dataset: zoomEnabled
-            ? { closeDuration: "200", zoomable: "true" }
-            : {},
-        querySelector: () => null,
-        style: { display: "none" },
-    });
+function createEnvironment() {
+    let domContentLoaded;
     const body = createEventTarget({ style: { overflow: "" } });
-    const image = createEventTarget({
-        alt: "Test caption",
-        classList: createClassList(["image_overlay"]),
-        dataset: { originalSrc: "https://example.test/image.jpg" },
-        closest(selector) {
-            return selector === "img.image_overlay" ? this : null;
+    const window = createEventTarget();
+    const document = {
+        body,
+        addEventListener(type, listener) {
+            if (type === "DOMContentLoaded") {
+                domContentLoaded = listener;
+            }
         },
+        createElement(tagName) {
+            const element = createEventTarget({ tagName: tagName.toUpperCase() });
+            if (tagName === "dialog") {
+                element.open = false;
+                element.showModal = function () {
+                    this.open = true;
+                };
+                element.close = function () {
+                    this.open = false;
+                    this.dispatch("close");
+                };
+            }
+            if (tagName === "img") {
+                element.clientHeight = 600;
+                element.clientWidth = 800;
+                element.src = "";
+            }
+            return element;
+        },
+    };
+
+    const source = readFileSync(path.join(repositoryRoot, handlerPath), "utf8");
+    vm.runInNewContext(source, { document, Math, window }, { filename: handlerPath });
+    domContentLoaded();
+
+    const dialog = body.children[0];
+    const content = dialog.children[0];
+    const [closeButton, stage, footer] = content.children;
+    const preview = stage.children[0];
+    const [caption, originalLink] = footer.children;
+    stage.clientHeight = 700;
+    stage.clientWidth = 1000;
+
+    const sourceImage = createEventTarget({
+        alt: "Test caption",
+        currentSrc: "https://example.test/webp/image.webp",
+        dataset: { originalSrc: "https://example.test/image.jpg" },
         src: "https://example.test/webp/image.webp",
     });
-    const document = createEventTarget({
+    sourceImage.closest = (selector) => selector === "img.image_overlay" ? sourceImage : null;
+
+    return {
         body,
-        getElementById(id) {
-            return { myModal: modal, image_box: modalImage, caption }[id] || null;
-        },
+        caption,
+        closeButton,
+        dialog,
+        originalLink,
+        preview,
+        sourceImage,
+    };
+}
+
+function testOpenAndClose() {
+    const environment = createEnvironment();
+    environment.body.dispatch("click", { target: environment.sourceImage });
+
+    assert.equal(environment.dialog.open, true, "Popover should open");
+    assert.equal(environment.preview.src, environment.sourceImage.currentSrc, "Popover should preview WebP");
+    assert.equal(environment.originalLink.href, environment.sourceImage.dataset.originalSrc);
+    assert.equal(environment.caption.textContent, environment.sourceImage.alt);
+    assert.equal(environment.body.style.overflow, "hidden");
+    assert.equal(environment.closeButton.focused, true);
+
+    environment.closeButton.dispatch("click");
+    assert.equal(environment.dialog.open, false, "Close button should close the popover");
+    assert.equal(environment.preview.src, "", "Closing should release the preview image");
+    assert.equal(environment.body.style.overflow, "");
+    assert.equal(environment.sourceImage.focused, true);
+}
+
+function testPinchZoom() {
+    const environment = createEnvironment();
+    environment.body.dispatch("click", { target: environment.sourceImage });
+
+    environment.preview.dispatch("touchstart", {
+        touches: [{ clientX: 0, clientY: 0 }, { clientX: 100, clientY: 0 }],
     });
-    const window = createEventTarget();
-
-    runHandler({
-        document,
-        Math,
-        Number,
-        setTimeout: (callback) => callback(),
-        window,
+    environment.preview.dispatch("touchmove", {
+        touches: [{ clientX: 0, clientY: 0 }, { clientX: 200, clientY: 0 }],
     });
-    document.dispatch("DOMContentLoaded");
 
-    return { body, caption, document, image, modal, modalImage };
+    assert.match(environment.preview.style.transform, /scale\(2\)$/);
+    assert.equal(environment.preview.classList.contains("is-zoomed"), true);
+
+    environment.preview.dispatch("touchend", { touches: [] });
+    environment.preview.dispatch("touchstart", {
+        touches: [{ clientX: 100, clientY: 100 }],
+    });
+    environment.preview.dispatch("touchmove", {
+        touches: [{ clientX: 150, clientY: 120 }],
+    });
+    assert.match(environment.preview.style.transform, /translate3d\(50px, 20px, 0\) scale\(2\)$/);
+
+    environment.preview.dispatch("touchend", { touches: [] });
+    environment.preview.dispatch("dblclick");
+    assert.match(environment.preview.style.transform, /scale\(1\)$/);
 }
 
-function testGenericModal() {
-    const environment = createModalEnvironment();
+testOpenAndClose();
+testPinchZoom();
 
-    assert.equal(environment.modal.attributes.get("role"), "dialog");
-    assert.equal(environment.modal.attributes.get("aria-hidden"), "true");
-
-    environment.body.dispatch("click", { target: environment.image });
-
-    assert.equal(environment.modal.style.display, "flex", "Modal should open");
-    assert.equal(environment.modal.attributes.get("aria-hidden"), "false");
-    assert.equal(environment.modal.focused, true, "Modal should receive focus when opened");
-    assert.equal(
-        environment.modalImage.src,
-        environment.image.dataset.originalSrc,
-        "Modal should show the original image",
-    );
-    assert.equal(environment.modalImage.dataset.originalSrc, environment.image.dataset.originalSrc);
-    assert.equal(environment.modalImage.alt, environment.image.alt, "Modal image should retain the alternative text");
-    assert.equal(environment.caption.textContent, environment.image.alt, "Modal should show the image caption");
-
-    environment.modal.focused = false;
-    environment.document.dispatch("keydown", { key: "Tab" });
-    assert.equal(environment.modal.focused, true, "Tab should keep focus in the modal");
-
-    environment.document.dispatch("keydown", { key: "Escape" });
-    assert.equal(environment.modal.style.display, "none", "Modal should close on Escape");
-    assert.equal(environment.modal.attributes.get("aria-hidden"), "true");
-    assert.equal(environment.image.focused, true, "Closing should return focus to the source image");
-}
-
-function testZoomableModal() {
-    const environment = createModalEnvironment({ zoomEnabled: true });
-    environment.body.dispatch("click", { target: environment.image });
-
-    assert.equal(environment.body.style.overflow, "hidden", "Zoomable modal should lock page scrolling");
-    assert.equal(
-        environment.modalImage.style.transform,
-        "translate(0px, 0px) scale(1)",
-        "Zoomable modal should reset its transform when opened",
-    );
-
-    environment.modalImage.dispatch("dblclick");
-    assert.match(environment.modalImage.style.transform, /scale\(2\.5\)$/, "Double-click should zoom in");
-
-    environment.document.dispatch("keydown", { key: "Escape" });
-    assert.equal(environment.body.style.overflow, "", "Closing should restore page scrolling");
-}
-
-testGenericModal();
-testZoomableModal();
-
-console.log("Modal handler tests passed.");
+console.log("Image popover tests passed.");
