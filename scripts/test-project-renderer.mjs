@@ -37,6 +37,7 @@ function createCard() {
         },
     };
     const title = { href: "", textContent: "" };
+    const liveAction = { hidden: true };
     const nodes = {
         ".project-image": createImage(),
         ".date": { textContent: "" },
@@ -44,11 +45,14 @@ function createCard() {
         ".project-desc": { textContent: "" },
         ".project-tech": { textContent: "" },
         ".project-button": { href: "", textContent: "" },
+        ".project-live-action": liveAction,
+        ".project-live-button": { href: "", textContent: "" },
         "a.image": imageLink,
     };
 
     return {
         imageLink,
+        liveAction,
         nodes,
         querySelector: (selector) => nodes[selector] || null,
         querySelectorAll: (selector) => selector === ".project-link" ? [title, imageLink] : [],
@@ -117,6 +121,13 @@ assert.equal(
     renderedCards[0].nodes[".project-button"].href,
     "https://github.com/sanghoon5499/spotify_info",
 );
+assert.equal(renderedCards[0].liveAction.hidden, false, "Spotify Info should show its hosted-page action");
+assert.equal(
+    renderedCards[0].nodes[".project-live-button"].href,
+    "https://sanghoon5499.github.io/spotify_info/",
+);
+assert.equal(renderedCards[0].nodes[".project-live-button"].textContent, "Try it");
+assert.equal(renderedCards[1].liveAction.hidden, true, "Projects without hosted pages should omit the second action");
 assert.equal(renderedCards[1].imageLink.removed, false, "Projects with images should retain them");
 assert.match(renderedCards[1].nodes[".project-image"].src, /cafe_logger_usage\.JPG$/);
 assert.equal(container.hasOddCards, false, "Four cards should fill the two-column grid");
