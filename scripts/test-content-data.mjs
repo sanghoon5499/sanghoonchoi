@@ -65,11 +65,24 @@ const projects = loadData("resume/project_data.js").projects;
 requireText(projects.imageBase, "project imageBase");
 assert.ok(projects.items.length > 0, "project items must not be empty");
 for (const [index, project] of projects.items.entries()) {
-    for (const field of ["title", "date", "image", "link", "description", "techStack", "buttonText"]) {
+    for (const field of ["title", "date", "link", "description", "techStack", "buttonText"]) {
         requireText(project[field], `project item ${index} ${field}`);
     }
+    assert.equal(typeof project.image, "string", `project item ${index} image must be text`);
 }
 requireUnique(projects.items, "title", "project");
+const spotifyInfo = projects.items.find((project) => project.title === "Spotify Info");
+assert.ok(spotifyInfo, "Spotify Info project must be listed");
+assert.equal(spotifyInfo.image, "spotify.png", "Spotify Info should use its future PNG image path");
+assert.equal(
+    spotifyInfo.webpImage,
+    "webp/spotify.webp",
+    "Spotify Info should use its future WebP image path",
+);
+const projectRenderer = readFileSync(path.join(repositoryRoot, "resume/projects.js"), "utf8");
+assert.match(projectRenderer, /if \(project\.image\)/);
+assert.match(projectRenderer, /if \(project\.webpImage\)/);
+assert.match(projectRenderer, /imageLink\.remove\(\)/);
 requireScriptOrder("resume/index.html", "project_data.js", "projects.js");
 
 const photography = loadData("photography/photo_data.js").photography;

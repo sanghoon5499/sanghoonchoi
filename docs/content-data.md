@@ -32,7 +32,8 @@ Edit `resume/project_data.js` and add an item to `items`:
 {
     title: "Project name",
     date: "Month 1, 2026",
-    image: "project-image.jpg",
+    image: "project-image.png", // Use "" when no image is planned.
+    webpImage: "webp/project-image.webp", // Omit when no WebP version is planned.
     link: "https://example.com/project",
     description: "What the project does.",
     techStack: "How the project was built.",
@@ -40,8 +41,11 @@ Edit `resume/project_data.js` and add an item to `items`:
 },
 ```
 
-Add only real projects. The renderer handles an odd number of cards, so no blank
-placeholder item is needed.
+Add only real projects. The optional `webpImage` field makes the renderer try that
+file first and fall back to `image`. If neither file is available, the renderer
+omits the image area instead of showing a broken image. Leave `image` empty when
+no image is planned. The renderer also handles an odd number of cards, so no
+blank layout item is needed.
 
 ## Add a photography collection
 
