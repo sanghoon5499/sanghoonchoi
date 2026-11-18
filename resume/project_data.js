@@ -9,9 +9,11 @@ window.siteContent.projects = {
             image: "spotify.png",
             webpImage: "webp/spotify.webp",
             link: "https://github.com/sanghoon5499/spotify_info",
+            liveLink: "https://sanghoon5499.github.io/spotify_info/",
             description: "Spotify Info is a dashboard for exploring a Spotify user's top tracks and artists, kinda like Spotify Wrapped.",
             techStack: "Built with the Spotify Web API. User-provided access tokens remain in browser memory while the page is open.",
             buttonText: "Github",
+            liveButtonText: "Try it",
         },
         {
             title: "Cafe Logger",

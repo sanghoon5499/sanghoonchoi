@@ -52,6 +52,15 @@ document.addEventListener("DOMContentLoaded", function () {
         button.href = project.link;
         button.textContent = project.buttonText;
 
+        if (project.liveLink) {
+            const liveAction = clone.querySelector(".project-live-action");
+            const liveButton = clone.querySelector(".project-live-button");
+
+            liveButton.href = project.liveLink;
+            liveButton.textContent = project.liveButtonText;
+            liveAction.hidden = false;
+        }
+
         container.appendChild(clone);
     });
 });

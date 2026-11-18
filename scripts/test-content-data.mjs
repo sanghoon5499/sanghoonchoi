@@ -69,6 +69,10 @@ for (const [index, project] of projects.items.entries()) {
         requireText(project[field], `project item ${index} ${field}`);
     }
     assert.equal(typeof project.image, "string", `project item ${index} image must be text`);
+    if (project.liveLink !== undefined || project.liveButtonText !== undefined) {
+        requireText(project.liveLink, `project item ${index} liveLink`);
+        requireText(project.liveButtonText, `project item ${index} liveButtonText`);
+    }
 }
 requireUnique(projects.items, "title", "project");
 const spotifyInfo = projects.items.find((project) => project.title === "Spotify Info");
@@ -79,6 +83,12 @@ assert.equal(
     "webp/spotify.webp",
     "Spotify Info should use its future WebP image path",
 );
+assert.equal(
+    spotifyInfo.liveLink,
+    "https://sanghoon5499.github.io/spotify_info/",
+    "Spotify Info should link to its hosted page",
+);
+assert.equal(spotifyInfo.liveButtonText, "Try it");
 const projectRenderer = readFileSync(path.join(repositoryRoot, "resume/projects.js"), "utf8");
 assert.match(projectRenderer, /if \(project\.image\)/);
 assert.match(projectRenderer, /if \(project\.webpImage\)/);
