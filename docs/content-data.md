@@ -59,7 +59,7 @@ Edit `photography/photo_data.js` and add a collection:
     name: "Collection name",
     photos: [
         {
-            filename: "photo.jpg",
+            filename: "Location/photo.jpg",
             location: "City, Region",
             caption: "What the photograph shows.",
         },
@@ -67,10 +67,16 @@ Edit `photography/photo_data.js` and add a collection:
 },
 ```
 
-Add more objects to `photos` in the order they should appear in the carousel.
-The shared `imageBase` and `username` values apply to every collection. Keep each
-`filename` on its original extension; WebP display and original fallback are
-automatic.
+Add collections to the beginning of `collections` so the newest collection
+appears at the top of the Photography page. Add photos to `photos` in the order
+they should appear in the carousel. Store originals in a location folder such as `Japan/photo.jpg` and WebP files in
+its `webp` folder such as `Japan/webp/photo.webp`. Record only the original path
+in `filename`; WebP display and original fallback are automatic. The shared
+`imageBase` and `username` values apply to every collection. Photography image
+areas use a consistent height capped at 82% of the viewport. Each image uses
+90% of the frame width so black gutters remain visible on both sides, and
+`object-fit: contain` keeps the full image uncropped. Mobile image areas use a
+compact viewport-width height so captions stay nearby.
 
 ## Validate
 

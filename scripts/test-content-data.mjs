@@ -99,9 +99,18 @@ const photography = loadData("photography/photo_data.js").photography;
 requireText(photography.imageBase, "photography imageBase");
 requireText(photography.username, "photography username");
 assert.ok(photography.collections.length > 0, "photo collections must not be empty");
+const expectedPhotoFolders = new Map([
+    ["Japan trip", "Japan/"],
+    ["Korea trip", "Korea/"],
+    ["Canada life", "Ontario/"],
+    ["The Getty", "Getty/"],
+]);
+
 for (const [collectionIndex, collection] of photography.collections.entries()) {
     requireText(collection.name, `photo collection ${collectionIndex} name`);
     assert.ok(collection.photos.length > 0, `photo collection ${collectionIndex} must contain photos`);
+    const expectedFolder = expectedPhotoFolders.get(collection.name);
+    assert.ok(expectedFolder, `photo collection ${collectionIndex} must have an image folder`);
     for (const [photoIndex, photo] of collection.photos.entries()) {
         for (const field of ["filename", "location", "caption"]) {
             requireText(photo[field], `photo collection ${collectionIndex} item ${photoIndex} ${field}`);
@@ -110,9 +119,40 @@ for (const [collectionIndex, collection] of photography.collections.entries()) {
             photo.filename,
             `photo collection ${collectionIndex} item ${photoIndex} filename`,
         );
+        assert.ok(
+            photo.filename.startsWith(expectedFolder),
+            `photo collection ${collectionIndex} item ${photoIndex} must use ${expectedFolder}`,
+        );
     }
 }
 requireUnique(photography.collections, "name", "photo collection");
+assert.equal(
+    expectedPhotoFolders.size,
+    photography.collections.length,
+    "Every photo collection should have one location folder",
+);
+const getty = photography.collections.find((collection) => collection.name === "The Getty");
+assert.ok(getty, "The Getty photo collection must be listed");
+assert.equal(
+    photography.collections[0].name,
+    "The Getty",
+    "The newest photo collection should appear first",
+);
+assert.deepEqual(
+    Array.from(getty.photos, (photo) => photo.filename),
+    [
+        "Getty/skate1.jpg",
+        "Getty/skate2.jpg",
+        "Getty/jeans.jpg",
+        "Getty/peace.jpg",
+        "Getty/patio.jpg",
+        "Getty/joe1.jpg",
+        "Getty/viewpoint.jpg",
+        "Getty/family.jpg",
+        "Getty/sunset_sky.jpg",
+    ],
+    "The Getty collection should contain every selected photo",
+);
 requireScriptOrder("photography/index.html", "../assets/js/media_loader.js", "photo_data.js");
 requireScriptOrder("photography/index.html", "photo_data.js", "photography.js");
 
