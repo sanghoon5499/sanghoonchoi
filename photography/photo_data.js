@@ -7,15 +7,15 @@ window.siteContent.photography = {
         {
             name: "The Getty",
             photos: [
-                { filename: "Getty/skate1.jpg", location: "The Getty", caption: "Palm trees outline the skate park" },
-                { filename: "Getty/skate2.jpg", location: "The Getty", caption: "Two skateboarders begin their descent. The shirtless skateboarder attempts to clear the barrel on the left" },
-                { filename: "Getty/jeans.jpg", location: "The Getty", caption: "Jeans at a thrift store. You can almost feel the texture through the photo" },
-                { filename: "Getty/peace.jpg", location: "The Getty", caption: "Paz a Todos Los Hombres" },
+                { filename: "Getty/skate1.jpg", location: "Venice Beach", caption: "Palm trees outline the skate park" },
+                { filename: "Getty/skate2.jpg", location: "Venice Beach", caption: "Two skateboarders begin their descent. The shirtless skateboarder is going for an attempt to clear the barrel on the left" },
+                { filename: "Getty/jeans.jpg", location: "Melrose Avenue", caption: "Jeans at a thrift store. You can almost feel the texture through the photo" },
+                { filename: "Getty/peace.jpg", location: "Pasadena", caption: "Paz a Todos Los Hombres" },
                 { filename: "Getty/patio.jpg", location: "The Getty", caption: "One of few sit-down areas at The Getty" },
                 { filename: "Getty/joe1.jpg", location: "The Getty", caption: "Joe" },
                 { filename: "Getty/viewpoint.jpg", location: "The Getty", caption: "Two visitors look out over the city" },
                 { filename: "Getty/family.jpg", location: "The Getty", caption: "Small steps for man, a giant leap for childkind" },
-                { filename: "Getty/sunset_sky.jpg", location: "The Getty", caption: "The clouds made a perfect canvas for the setting sun's rays" },
+                { filename: "Getty/sunset_sky.jpg", location: "Pasadena", caption: "The clouds made a perfect canvas for the setting sun's rays" },
             ],
         },
         {
